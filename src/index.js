@@ -1,23 +1,45 @@
-import React from 'react';
+import React from "react";
+import { BrowserRouter as Router, useHistory, useLocation  } from "react-router-dom";
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider } from 'react-redux'
+
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './assets/scss/app.scss';
+
 import App from './App';
+import store from './store';
+
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#bbdefb',
+      main: '#42a5f5',
+      dark: '#1565c0',
+      contrastText: '#fff',
+    },
+    success: {
+      light: '#6fbf73',
+      main: '#4caf50',
+      dark: '#357a38',
+      contrastText: '#fff',
+    }
+  },
+});
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </Provider>
+  , document.getElementById('app'));
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.unregister();
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+serviceWorkerRegistration.register();
 reportWebVitals();

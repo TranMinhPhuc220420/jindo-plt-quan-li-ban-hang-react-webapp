@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router  } from "react-router-dom";
 
-function App() {
+import { useSelector, useDispatch } from 'react-redux';
+
+// Style
+import './assets/scss/app.scss';
+
+// Components
+import RouterMain from "./router";
+import MyLayout from "./layouts";
+
+const App = (props) => {
+  //Variable
+  const dispatch = useDispatch();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <Router>
+      <MyLayout>
+        <RouterMain />
+      </MyLayout>
+    </Router>
+  )
+};
 
 export default App;
