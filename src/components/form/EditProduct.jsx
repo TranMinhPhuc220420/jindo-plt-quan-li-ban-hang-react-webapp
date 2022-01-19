@@ -1,5 +1,6 @@
 // Main import need
 import React, {useState, useEffect} from "react";
+import {useHistory} from "react-router-dom";
 
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -31,9 +32,11 @@ import {DOMAIN_APP} from "../../constant";
 // Main this component
 const FormEditProduct = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   // Variable store
   const catgorys = useSelector(state => state.data.categorys);
+  const [isMobile, setIsMobile] = useState(PltCommon.isMobile);
 
   // Variable component
   const [name, setName] = useState(props.dataEdit.name);
@@ -114,10 +117,14 @@ const FormEditProduct = (props) => {
 
   const handlerAddNewSuccess = () => {
     showSnack(PltLang.getMsg('TXT_UPDATE_SUCCESS'), 'text-success', true);
-    dispatch(setAppOpenDialogEdit(false));
 
     ProductRequest.getAll().then(data => {
       dispatch(setDataProducts(data));
+
+      dispatch(setAppOpenDialogEdit(false));
+      if (!isMobile) {
+        history.push('/admin/san-pham');
+      }
     });
   };
   const handlerAddNewFail = () => {
@@ -128,7 +135,7 @@ const FormEditProduct = (props) => {
 
   // Return content this component
   return (
-    <form style={{height: heightAuto}} onSubmit={handlerSubmit}>
+    <form style={isMobile ? {height: heightAuto} : {}} onSubmit={handlerSubmit}>
       <Card className={'w-100 h-100 overflow-auto'}>
         <CardContent className="">
           <FormControl className="w-100">
@@ -184,26 +191,58 @@ const FormEditProduct = (props) => {
             />
           </FormControl>
 
-          <FormControl className={'w-100 mt-4'}>
-            {image_file.url_temp !== '' && (
-              <img src={image_file.url_temp} className={'w-100'} alt=""/>
-            )}
-            <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
-                         type={'file'}
-                         accept="image/png, image/jpeg, image/bmp"
-                         onChange={(event) => {
-                           const files = event.target.files;
+          {isMobile && (
+            <FormControl className={'w-100 mt-4'}>
+              {image_file.url_temp !== '' && (
+                <img src={image_file.url_temp} className={'w-100'} alt=""/>
+              )}
+              <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
+                           type={'file'}
+                           accept="image/png, image/jpeg, image/bmp"
+                           onChange={(event) => {
+                             const files = event.target.files;
 
-                           if (files.length > 0) {
-                             const file = files[0];
-                             setImageFile({
-                               file: file,
-                               url_temp: PltCommon.getFileUrlTemp(file)
-                             });
-                           }
-                         }}
-            />
-          </FormControl>
+                             if (files.length > 0) {
+                               const file = files[0];
+                               setImageFile({
+                                 file: file,
+                                 url_temp: PltCommon.getFileUrlTemp(file)
+                               });
+                             }
+                           }}
+              />
+            </FormControl>
+          )}
+
+          {!isMobile && (
+            <div className="row">
+              <div className="col-md-6">
+                <FormControl className={'w-100 mt-4'}>
+                  <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
+                               type={'file'}
+                               accept="image/png, image/jpeg, image/bmp"
+                               onChange={(event) => {
+                                 const files = event.target.files;
+
+                                 if (files.length > 0) {
+                                   const file = files[0];
+                                   setImageFile({
+                                     file: file,
+                                     url_temp: PltCommon.getFileUrlTemp(file)
+                                   });
+                                 }
+                               }}
+                  />
+                </FormControl>
+              </div>
+              <div className="col-md-6">
+                {image_file.url_temp !== '' && (
+                  <img src={image_file.url_temp} style={{ height: 100 }} alt=""/>
+                )}
+              </div>
+            </div>
+          )}
+
         </CardContent>
         <Divider/>
         <CardActions className="justify-content-end">

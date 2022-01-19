@@ -1,12 +1,13 @@
 // Main import need
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
+import {useHistory} from 'react-router-dom';
 
 // Store redux
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   setAppOpenDialogAddNew,
-  setDataCategorys,
-  setAppGridIsLoading
+  setAppGridIsLoading,
+  setDataProducts,
 } from "../../store/action";
 
 // Component Material UI
@@ -21,36 +22,34 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import DialogContainerForm from "../../components/dialog/ContainerForm";
 import FormAddNewCategory from "../../components/form/AddNewCategory";
 import FormEditCategory from "../../components/form/EditCategory";
-import GridCagegory from "../../components/grid/Category";
 
 // Utils mores
 import PltLang from "../../plt_lang";
 import PltCommon from "../../plt_common";
 
-import CategoryRequest from "../../requests/Category";
+import ProductRequset from "../../requests/Product";
+import GridProduct from "../../components/grid/Product";
 
 // Main this component
-const ViewCategoryDesktop = (props) => {
+const ViewProductDesktop = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   // Variable component
 
   // Variable store
-  const openDialogAddNew = useSelector(state => state.app.open_dialog_add_new);
-  const openDialogEdit = useSelector(state => state.app.open_dialog_edit);
 
   // Methods
   const handlerShowDialogAddNew = () => {
-    dispatch(setAppOpenDialogAddNew(true));
+    history.push('/admin/san-pham/them-moi');
   };
 
   const handlerRefreshData = () => {
     dispatch(setAppGridIsLoading(true));
-    
-    CategoryRequest.getAll().then(data => {
-      dispatch(setDataCategorys(data));
+    ProductRequset.getAll().then(data => {
+      dispatch(setDataProducts(data));
       dispatch(setAppGridIsLoading(false));
     });
-  }
+  };
   // End methods *******************
 
   // Return content this component
@@ -59,20 +58,19 @@ const ViewCategoryDesktop = (props) => {
       {/* Toolbar */}
       <div className="toolbar mb-2">
         <div className="d-flex justify-content-between">
-          <h4>{PltLang.getMsg('TXT_CATEGORY')}</h4>
-
+          <h4>{PltLang.getMsg('TXT_PRODUCT')}</h4>
           <div className="text-right">
             <Button color="primary" variant="contained" aria-label="add new"
-              className=""
-              onClick={handlerShowDialogAddNew}
+                    className=""
+                    onClick={handlerShowDialogAddNew}
             >
               <AddIcon></AddIcon>
               Thêm mới
             </Button>
 
             <Button color="primary" variant="contained" aria-label="add new"
-              className="ml-2"
-              onClick={handlerRefreshData}
+                    className="ml-2"
+                    onClick={handlerRefreshData}
             >
               <RefreshIcon></RefreshIcon>
               Tải lại
@@ -81,21 +79,9 @@ const ViewCategoryDesktop = (props) => {
         </div>
       </div>
 
-      <GridCagegory />
-
-      {openDialogAddNew && (
-        <DialogContainerForm fullScreen={false} open={openDialogAddNew} title={PltLang.getMsg('TITLE_DIALOG_ADD_NEW')}>
-          <FormAddNewCategory />
-        </DialogContainerForm>
-      )}
-
-      {openDialogEdit.is_show && (
-        <DialogContainerForm open={openDialogEdit.is_show} title={PltLang.getMsg('TITLE_DIALOG_UPDATE')}>
-          <FormEditCategory dataEdit={openDialogEdit.dataEdit} />
-        </DialogContainerForm>
-      )}
+      <GridProduct/>
     </>
   )
 };
 
-export default ViewCategoryDesktop;
+export default ViewProductDesktop;

@@ -1,5 +1,6 @@
 // Main import need
 import React, {useState, useEffect} from "react";
+import {useHistory} from 'react-router-dom';
 
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -24,9 +25,11 @@ import {MyUtils} from "../../utils";
 // Main this component
 const FormAddNewProduct = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   // Variable store
   const catgorys = useSelector(state => state.data.categorys);
+  const [isMobile, setIsMobile] = useState(PltCommon.isMobile);
 
   // Variable component
   const [name, setName] = useState('');
@@ -50,13 +53,13 @@ const FormAddNewProduct = (props) => {
     if (PltCommon.isStrEmpty(price)) {
       return false;
     }
-    
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('rest', rest);
     formData.append('price', price);
     formData.append('category_id', category_id);
-    
+
     if (!image_file.file || image_file.file === '') {
       // return false;
     } else {
@@ -101,10 +104,15 @@ const FormAddNewProduct = (props) => {
 
   const handlerAddNewSuccess = () => {
     showSnack(PltLang.getMsg('TXT_CREATE_NEW_SUCCESS'), 'text-success', true);
-    dispatch(setAppOpenDialogAddNew(false));
 
     ProductRequest.getAll().then(data => {
       dispatch(setDataProducts(data));
+
+      dispatch(setAppOpenDialogAddNew(false));
+
+      if (!isMobile) {
+        history.push('/admin/san-pham');
+      }
     });
   };
   const handlerAddNewFail = () => {
@@ -115,7 +123,7 @@ const FormAddNewProduct = (props) => {
 
   // Return content this component
   return (
-    <form style={{height: heightAuto}} onSubmit={handlerSubmit}>
+    <form style={isMobile ? {height: heightAuto} : {}} onSubmit={handlerSubmit}>
       <Card className={'w-100 h-100 overflow-auto'}>
         <CardContent className="">
           <FormControl className="w-100">
@@ -163,26 +171,56 @@ const FormAddNewProduct = (props) => {
             />
           </FormControl>
 
-          <FormControl className={'w-100 mt-4'}>
-            {image_file.url_temp !== '' && (
-              <img src={image_file.url_temp} className={'w-100'} alt=""/>
-            )}
-            <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
-                         type={'file'}
-                         accept="image/png, image/jpeg, image/bmp"
-                         onChange={(event) => {
-                           const files = event.target.files;
+          {isMobile && (
+            <FormControl className={'w-100 mt-4'}>
+              {image_file.url_temp !== '' && (
+                <img src={image_file.url_temp} className={'w-100'} alt=""/>
+              )}
+              <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
+                           type={'file'}
+                           accept="image/png, image/jpeg, image/bmp"
+                           onChange={(event) => {
+                             const files = event.target.files;
 
-                           if (files.length > 0) {
-                             const file = files[0];
-                             setImageFile({
-                               file: file,
-                               url_temp: PltCommon.getFileUrlTemp(file)
-                             });
-                           }
-                         }}
-            />
-          </FormControl>
+                             if (files.length > 0) {
+                               const file = files[0];
+                               setImageFile({
+                                 file: file,
+                                 url_temp: PltCommon.getFileUrlTemp(file)
+                               });
+                             }
+                           }}
+              />
+            </FormControl>
+          )}
+          {!isMobile && (
+            <div className={'row'}>
+              <div className="col-md-6">
+                <FormControl className={'w-100 mt-4'}>
+                  <FilledInput label={PltLang.getMsg('LABEL_INPUT_IMAGE_PRODUCT')}
+                               type={'file'}
+                               accept="image/png, image/jpeg, image/bmp"
+                               onChange={(event) => {
+                                 const files = event.target.files;
+
+                                 if (files.length > 0) {
+                                   const file = files[0];
+                                   setImageFile({
+                                     file: file,
+                                     url_temp: PltCommon.getFileUrlTemp(file)
+                                   });
+                                 }
+                               }}
+                  />
+                </FormControl>
+              </div>
+              <div className="col-md-6">
+                {image_file.url_temp !== '' && (
+                  <img src={image_file.url_temp} style={{ height: 100 }} alt=""/>
+                )}
+              </div>
+            </div>
+          )}
         </CardContent>
 
         <Divider/>

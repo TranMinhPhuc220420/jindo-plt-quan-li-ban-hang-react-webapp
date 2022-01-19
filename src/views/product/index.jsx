@@ -3,10 +3,9 @@ import { useHistory } from "react-router-dom"
 
 // Store
 import { useSelector, useDispatch } from 'react-redux'
-import { setDataCategorys } from "../../store/action";
 import PltCommon from "../../plt_common";
-import ViewCategoryMobile from "./mobile";
-import {List} from "@material-ui/core";
+import ViewProductMobile from "./mobile";
+import ViewProductDesktop from "./desktop";
 
 // Component Material UI
 
@@ -29,7 +28,10 @@ const ViewProduct = () => {
   return (
     <div className={'container'} style={{height: heightAuto}}>
       {isMobile && (
-        <ViewCategoryMobile/>
+        <ViewProductMobile/>
+      )}
+      {!isMobile && (
+        <ViewProductDesktop/>
       )}
     </div>
   )

@@ -1,8 +1,9 @@
 // Main import need
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
+import { useHistory } from 'react-router-dom';
 
 // Store redux
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 // Component Material UI
 import {
@@ -20,25 +21,26 @@ import EditIcon from '@material-ui/icons/Edit';
 
 // PLT Solution
 import PltCommon from "../../plt_common";
-import { setAppOpenDialogEdit, setAppSnackBar, setDataCategorys } from "../../store/action";
-import { MyUtils } from "../../utils";
+import {setAppOpenDialogEdit, setAppSnackBar, setDataCategorys, setDataProducts} from "../../store/action";
+import {MyUtils} from "../../utils";
 import PltLang from "../../plt_lang";
 import CategoryRequest from "../../requests/Category";
 
 // Utils mores
 import Moment from 'moment';
-
+import ProductRequest from "../../requests/Product";
 
 // Main this component
-const GridCagegory = (props) => {
+const GridProduct = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   // Variable component
   const apiRef = useGridApiRef();
 
   // Variable store
 
-  const dataCategorys = useSelector(state => {
-    const data = state.data.categorys;
+  const dataProducts = useSelector(state => {
+    const data = state.data.products;
     const keySearch = state.app.key_search;
 
     if (!keySearch || keySearch === '') {
@@ -48,7 +50,9 @@ const GridCagegory = (props) => {
     const dataFind = [];
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      if (PltCommon.subStrToLowWidthSpace(item.name).indexOf(keySearch) !== -1) {
+      const likeName = PltCommon.subStrToLowWidthSpace(item.name).indexOf(keySearch) !== -1;
+      const likeCateogryName = PltCommon.subStrToLowWidthSpace(item.category.name).indexOf(keySearch) !== -1;
+      if (likeName || likeCateogryName) {
         dataFind.push(item);
       }
     }
@@ -58,8 +62,10 @@ const GridCagegory = (props) => {
   const gridIsLoading = useSelector(state => state.app.grid_is_loading);
 
   const columns = [
-    { field: 'id', headerName: '#ID' },
-    { field: 'name', headerName: 'Tên loại', flex: 1 },
+    {field: 'id', headerName: '#ID'},
+    {field: 'name', headerName: 'Tên loại', flex: 1, editable: true},
+    {field: 'price', headerName: 'Giá bán', width: 150, editable: true, type: 'number',},
+    {field: 'rest', headerName: 'Trong kho còn', width: 150, editable: true, type: 'number',},
     {
       field: 'created_at', headerName: 'Ngày tạo', width: 150,
       valueFormatter: (params) => {
@@ -78,7 +84,7 @@ const GridCagegory = (props) => {
       headerName: 'Actions',
       width: 100,
       cellClassName: 'actions',
-      getActions: ({ id }) => {
+      getActions: ({id}) => {
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
@@ -87,10 +93,12 @@ const GridCagegory = (props) => {
             onClick={() => { handlerClickEdit(id) }}
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={<DeleteIcon/>}
             label="Delete"
             className="text-danger"
-            onClick={() => { handlerClickDelete(id) }}
+            onClick={() => {
+              handlerClickDelete(id)
+            }}
           />,
         ];
       }
@@ -98,10 +106,10 @@ const GridCagegory = (props) => {
   ];
 
   // Methods
-  const getCategoryByID = (id) => {
-    for (let i = 0; i < dataCategorys.length; i++) {
-      const item = dataCategorys[i];
-      
+  const getProductByID = (id) => {
+    for (let i = 0; i < dataProducts.length; i++) {
+      const item = dataProducts[i];
+
       if (item.id === id) {
         return item
       }
@@ -111,21 +119,38 @@ const GridCagegory = (props) => {
 
   const showSnack = (text, color, isShow, time) => {
     if (!time) time = 3000;
-    dispatch(setAppSnackBar({ open: isShow, text: text, color: color }));
+    dispatch(setAppSnackBar({open: isShow, text: text, color: color}));
 
     setTimeout(() => {
-      dispatch(setAppSnackBar({ open: false, text: '', color: '' }));
+      dispatch(setAppSnackBar({open: false, text: '', color: ''}));
     }, time);
   };
 
-  const handlerClickEdit = (idEdit) => {
-    const dataEdit = getCategoryByID(idEdit);
-    dispatch(setAppOpenDialogEdit({
-      is_show: true,
-      dataEdit: dataEdit
-    }))
-  };
+  const handleCellEditCommit = async (dataChanged, event) => {
+    const formData = new FormData();
+    formData.append('id', dataChanged.id);
+    formData.append(dataChanged.field, dataChanged.value);
 
+    showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
+    // Call request add new category
+    const result = await ProductRequest.update(formData);
+    showSnack('', '', false);
+
+    if (result != null) {
+      handlerAddNewSuccess();
+    } else {
+      handlerAddNewFail();
+    }
+  };
+  const handlerClickEdit = (idEdit) => {
+    const productEdit = getProductByID(idEdit);
+    dispatch(setAppOpenDialogEdit({
+      is_show: false,
+      dataEdit: productEdit
+    }));
+
+    history.push('/admin/san-pham/chinh-sua/' + idEdit)
+  };
   const handlerClickDelete = (idEdit) => {
     MyUtils.Alter.showAsk(
       PltLang.getMsg('TITLE_ASK_CONFIRM_DELETE_FATHER'),
@@ -136,7 +161,7 @@ const GridCagegory = (props) => {
           const formData = new FormData();
           formData.append('id', idEdit);
           showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
-          const result = await CategoryRequest.delete(formData);
+          const result = await ProductRequest.delete(formData);
           showSnack('', '', false);
 
           if (result) {
@@ -153,12 +178,24 @@ const GridCagegory = (props) => {
     showSnack(PltLang.getMsg('TXT_DELETE_SUCCESS'), 'text-success', true);
     dispatch(setAppOpenDialogEdit(false));
 
-    CategoryRequest.getAll().then(data => {
-      dispatch(setDataCategorys(data));
+    ProductRequest.getAll().then(data => {
+      dispatch(setDataProducts(data));
     });
   };
   const handlerDeleteFail = () => {
     showSnack(PltLang.getMsg('TXT_DELETE_FAILD'), 'text-error', true);
+    dispatch(setAppOpenDialogEdit(false));
+  };
+  const handlerAddNewSuccess = () => {
+    showSnack(PltLang.getMsg('TXT_UPDATE_SUCCESS'), 'text-success', true);
+    dispatch(setAppOpenDialogEdit(false));
+
+    ProductRequest.getAll().then(data => {
+      dispatch(setDataProducts(data));
+    });
+  };
+  const handlerAddNewFail = () => {
+    showSnack(PltLang.getMsg('TXT_UPDATE_FAILD'), 'text-error', true);
     dispatch(setAppOpenDialogEdit(false));
   };
   // End methods *******************
@@ -166,28 +203,29 @@ const GridCagegory = (props) => {
   // Return content this component
   return (
     <>
-      {dataCategorys.length === 0 && (
+      {dataProducts.length === 0 && (
         PltLang.getMsg('TXT_DATA_EMPTY')
       )}
 
-      <div style={{ display: 'flex', height: '95%' }}>
-        <div style={{ flexGrow: 1 }}>
+      <div style={{display: 'flex', height: '95%'}}>
+        <div style={{flexGrow: 1}}>
 
           {gridIsLoading && (
-            <LinearProgress />
+            <LinearProgress/>
           )}
 
           <DataGrid
             style={{backgroundColor: '#fff'}}
-            rows={dataCategorys}
+            rows={dataProducts}
             columns={columns}
             components={{
               Toolbar: GridToolbar,
             }}
             apiRef={apiRef}
             componentsProps={{
-              toolbar: { apiRef },
+              toolbar: {apiRef},
             }}
+            onCellEditCommit={handleCellEditCommit}
           />
         </div>
       </div>
@@ -196,4 +234,4 @@ const GridCagegory = (props) => {
   )
 };
 
-export default GridCagegory;
+export default GridProduct;

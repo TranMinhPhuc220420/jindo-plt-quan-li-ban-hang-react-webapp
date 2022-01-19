@@ -28,6 +28,7 @@ const PltLang = {
     TXT_DESCRIPTION_ASK_CONFIRM_DELETE_FATHER: 'Đây là dữ liệu cha của dữ liệu khác. Khi bạn xoá dữ liệu này, thì các dữ liệu con thuộc dữ liệu này cũng sẽ xoá theo',
     TXT_CUSTOMER: 'Khách hàng',
     TXT_PRODUCT: 'Sản phẩm',
+    TXT_CATEGORY: 'Loại sản phẩm',
     TITLE_DIALOG_LIST_PRODUCT: 'Chọn sản phẩm',
     TXT_RESULT: 'Kết quả',
     TXT_PREVIEW_BILL: 'Tóm tắc thanh toán',

@@ -6,7 +6,7 @@ const PltMenu = {
       icon: 'home',
     },
     {
-      name: 'Lại sản phẩm',
+      name: 'Loại sản phẩm',
       pathname: '/admin/loai-san-pham',
       icon: 'category',
     },
