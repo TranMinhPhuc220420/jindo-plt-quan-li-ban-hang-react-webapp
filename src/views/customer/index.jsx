@@ -9,6 +9,7 @@ import {List} from "@material-ui/core";
 
 // Component Material UI
 import ViewCustomerMobile from "./mobile";
+import ViewCustomerDesktop from "./desktop";
 
 // Component Plt Solution
 
@@ -30,6 +31,9 @@ const ViewCustomer = () => {
     <div className={'container'} style={{height: heightAuto}}>
       {isMobile && (
         <ViewCustomerMobile/>
+      )}
+      {!isMobile && (
+        <ViewCustomerDesktop/>
       )}
     </div>
   )

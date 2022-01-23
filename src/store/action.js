@@ -139,7 +139,7 @@ export const setDataCategorys = (data) => {
 export const setDataProducts = (data) => {
   for (let i = 0; i < data.length; i++) {
     data[i].price = Number.parseInt(data[i].price);
-    data[i].url_image += `?v=${Math.random()}`;
+    data[i].image_url += `?v=${Math.random()}`;
   }
   return {
     type: typeAction.SET_DATA_PRODUCT,

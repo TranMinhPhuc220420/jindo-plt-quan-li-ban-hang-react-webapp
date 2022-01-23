@@ -3,6 +3,7 @@ import { BrowserRouter as Router, useHistory } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  setAppViewActive,
   setDataBills,
   setDataCategorys,
   setDataCustomers, setDataInsurancess,
@@ -37,6 +38,7 @@ import ProductRequest from "../requests/Product";
 import CustomerRequest from "../requests/Customer";
 import BillRequest from "../requests/Bill";
 import InsurancesRequest from "../requests/Insurances";
+import PltMenu from "../plt_menu";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -102,7 +104,7 @@ const MyLayout = (props) => {
       dispatch(setDataUserLogin(data.user));
       dispatch(setDataAccessToken(data.access_token));
 
-      let isNeedReload = (history.location.pathname !== '/admin/trang-chu');
+      // let isNeedReload = (history.location.pathname !== '/admin/trang-chu');
       if (showNotification == true) {
         MyUtils.Alter.showSuccess(
           PltLang.getMsg('TXT_TITLE_LOGIN_SUCCESS'),
@@ -110,13 +112,20 @@ const MyLayout = (props) => {
         );
       }
 
-      if (isNeedReload) {
-        history.push('/admin/trang-chu');
-        window.location.reload();
-      } else {
-        // Call init data for Admin
-        await initDataForAdmin();
-      }
+      PltMenu.getMenu().forEach(item => {
+        if (history.location.pathname == item.pathname) {
+          dispatch(setAppViewActive(item));
+        }
+      });
+
+      // if (isNeedReload) {
+      //   history.push('/admin/trang-chu');
+      //   window.location.reload();
+      // } else {
+      // }
+
+      // Call init data for Admin
+      await initDataForAdmin();
     }
     else if (userRole == constant.KEY_OF_ROLE_CLIENT) {
       // TODO:: Handler when user login has role is client

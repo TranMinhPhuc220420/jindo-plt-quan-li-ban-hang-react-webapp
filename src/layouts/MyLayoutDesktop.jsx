@@ -97,6 +97,12 @@ const MyLayoutDesktop = (props) => {
   const theme = useTheme();
   const overNavLeft = useSelector(((state) => state.ui.open_nav_left));
   const user = useSelector(((state) => state.user));
+  const viewActive = useSelector(state => state.app.view_active);
+  const viewProfile = {
+    name: 'Hồ sơ',
+    pathname: '/admin/ho-so',
+    icon: 'account_circle',
+  };
 
   const handleDrawerOpen = () => {
     dispatch(setUiOpenNavLeft(true));
@@ -120,6 +126,10 @@ const MyLayoutDesktop = (props) => {
     await AdminRequest.logout(accessToken);
 
     window.location.reload();
+  };
+
+  const isViewActive = (view) => {
+    return (viewActive.pathname == view.pathname);
   };
 
   return (
@@ -172,7 +182,9 @@ const MyLayoutDesktop = (props) => {
 
             {/* Menu */}
             <List>
-              <ListItem button onClick={handlerClickItemMenu}>
+              <ListItem className={isViewActive(viewProfile) ? 'menu-active' : ''} button onClick={() => {
+                handlerClickItemMenu(viewProfile)
+              }}>
                 <ListItemAvatar>
                   <Avatar src={`${DOMAIN_APP}/images/avatar/default.png`} />
                 </ListItemAvatar>
@@ -189,14 +201,19 @@ const MyLayoutDesktop = (props) => {
 
               <Divider />
               {PltMenu.getMenu().map((menuItem, index) => (
-                <ListItem button onClick={() => handlerClickItemMenu(menuItem)} key={index}>
+                <ListItem
+                  button
+                  className={isViewActive(menuItem) ? 'menu-active' : ''}
+                  onClick={() => handlerClickItemMenu(menuItem)} key={index}
+                >
                   <ListItemIcon>
                     <Icon>{menuItem.icon}</Icon>
                   </ListItemIcon>
                   <ListItemText>
                     {menuItem.name}
                   </ListItemText>
-                </ListItem>
+                </ListItem
+                >
               ))}
               <ListItem button onClick={handlerClickLogout}>
                 <ListItemIcon>

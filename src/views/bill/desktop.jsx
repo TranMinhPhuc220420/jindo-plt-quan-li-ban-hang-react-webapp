@@ -5,8 +5,9 @@ import {useHistory} from 'react-router-dom';
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
 import {
+  setAppOpenDialogAddNew,
   setAppGridIsLoading,
-  setDataInsurancess,
+  setDataBills,
 } from "../../store/action";
 
 // Component Material UI
@@ -17,16 +18,15 @@ import AddIcon from '@material-ui/icons/Add';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 // PLT Solution
+import GridBill from "../../components/grid/Bill";
 
 // Utils mores
 import PltLang from "../../plt_lang";
 import PltCommon from "../../plt_common";
-
-import InsurancesRequest from "../../requests/Insurances";
-import GridInsurance from "../../components/grid/Insurance";
+import BillRequest from "../../requests/Bill";
 
 // Main this component
-const ViewInsurancesDesktop = (props) => {
+const ViewBillDesktop = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   // Variable component
@@ -35,13 +35,13 @@ const ViewInsurancesDesktop = (props) => {
 
   // Methods
   const handlerShowDialogAddNew = () => {
-    history.push('/admin/san-pham/them-moi');
+    history.push('/admin/hoa-don/them-moi');
   };
 
   const handlerRefreshData = () => {
     dispatch(setAppGridIsLoading(true));
-    InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+    BillRequest.getAll().then(data => {
+      dispatch(setDataBills(data));
       dispatch(setAppGridIsLoading(false));
     });
   };
@@ -53,15 +53,15 @@ const ViewInsurancesDesktop = (props) => {
       {/* Toolbar */}
       <div className="toolbar mb-2">
         <div className="d-flex justify-content-between">
-          <h4>{PltLang.getMsg('TXT_PRODUCT')}</h4>
+          <h4>{PltLang.getMsg('TXT_BIll')}</h4>
           <div className="text-right">
-            {/*<Button color="primary" variant="contained" aria-label="add new"*/}
-            {/*        className=""*/}
-            {/*        onClick={handlerShowDialogAddNew}*/}
-            {/*>*/}
-            {/*  <AddIcon></AddIcon>*/}
-            {/*  Thêm mới*/}
-            {/*</Button>*/}
+            <Button color="primary" variant="contained" aria-label="add new"
+                    className=""
+                    onClick={handlerShowDialogAddNew}
+            >
+              <AddIcon></AddIcon>
+              Thêm mới
+            </Button>
 
             <Button color="primary" variant="contained" aria-label="add new"
                     className="ml-2"
@@ -74,9 +74,9 @@ const ViewInsurancesDesktop = (props) => {
         </div>
       </div>
 
-      <GridInsurance/>
+      <GridBill/>
     </>
   )
 };
 
-export default ViewInsurancesDesktop;
+export default ViewBillDesktop ;

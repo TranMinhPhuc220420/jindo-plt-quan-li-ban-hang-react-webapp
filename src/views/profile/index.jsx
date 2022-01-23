@@ -3,19 +3,17 @@ import { useHistory } from "react-router-dom"
 
 // Store
 import { useSelector, useDispatch } from 'react-redux'
-import {  } from "../../store/action";
 import PltCommon from "../../plt_common";
-import ViewInsurancesMobile from "./mobile";
-import ViewInsurancesDesktop from "./desktop";
 
 // Component Material UI
 
 // Component Plt Solution
+import FormEditProfile from "../../components/form/EditProfile";
 
 // Utils others
 
 
-const ViewInsurances = () => {
+const ViewProfile = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -28,15 +26,10 @@ const ViewInsurances = () => {
   //Component return view
   return (
     <div className={'container'} style={{height: heightAuto}}>
-      {isMobile && (
-        <ViewInsurancesMobile/>
-      )}
-      {!isMobile && (
-        <ViewInsurancesDesktop/>
-      )}
+      <FormEditProfile/>
     </div>
   )
 
 };
 
-export default ViewInsurances;
+export default ViewProfile;

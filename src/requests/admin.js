@@ -2,10 +2,13 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 import * as constant from '../constant';
+import PltCommon from "../plt_common";
+import PltRequest from "./index";
 
 const url_loginByEmailPassword = `${constant.DOMAIN_APP}/api/admin/login`;
 const url_logout = `${constant.DOMAIN_APP}/api/admin/logout`;
 const url_getInfoByToken = `${constant.DOMAIN_APP}/api/admin/info`;
+const url_update_security = `${constant.DOMAIN_APP}/api/admin/process-update-security`;
 
 const AdminRequest = {
   /**
@@ -102,6 +105,23 @@ const AdminRequest = {
       Cookies.remove('access_token');
       return constant.OBJECT_REQUEST_UNAUTHORIZED;
     }
+  },
+
+  /**
+   * Update
+   * @returns {Object}
+   */
+  update: async (formData) => {
+    const accessToken = await PltCommon.getAccessTokenUserCooke();
+
+    return PltRequest.postData({
+      method: constant.KEY_METHOD_POST,
+      url: url_update_security,
+      data: formData,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      },
+    });
   },
 };
 

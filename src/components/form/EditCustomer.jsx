@@ -116,7 +116,7 @@ const FormEditCustomer = (props) => {
   // Return content this component
   return (
     <form onSubmit={handlerSubmitEdit}>
-      <Card style={{width: 345}}>
+      <Card>
         <CardContent>
           <FormControl className={'w-100'}>
             <TextField id="id_customer" name="id_customer"
@@ -145,7 +145,7 @@ const FormEditCustomer = (props) => {
         </CardContent>
         <CardActions className="justify-content-end">
           <Button type="submit" variant="contained" color="primary">
-            {PltLang.getMsg('TXT_BTN_ADD_NEW')}
+            {PltLang.getMsg('TXT_BTN_UPDATE')}
           </Button>
         </CardActions>
       </Card>

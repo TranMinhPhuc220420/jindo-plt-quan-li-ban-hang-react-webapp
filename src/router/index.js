@@ -12,6 +12,8 @@ import ViewBill from "../views/bill";
 import ViewInsurances from "../views/insurances";
 import ViewAddNewProductDesktop from "../views/product/addNewDesktop";
 import ViewEditProductDesktop from "../views/product/editDesktop";
+import ViewAddNewBillDesktop from "../views/bill/addNewDesktop";
+import ViewProfile from "../views/profile";
 
 const RouterMain = () => {
   const user = useSelector(((state) => state.user));
@@ -23,12 +25,14 @@ const RouterMain = () => {
       {user!=null && (
         <>
           <Route path="/admin/trang-chu" component={ViewHome} exact/>
+          <Route path="/admin/ho-so" component={ViewProfile} exact/>
           <Route path="/admin/loai-san-pham" component={ViewCategory} exact/>
           <Route path="/admin/san-pham" component={ViewProduct} exact/>
           <Route path="/admin/san-pham/them-moi" component={ViewAddNewProductDesktop} exact/>
           <Route path="/admin/san-pham/chinh-sua/:idEdit" component={ViewEditProductDesktop} exact/>
           <Route path="/admin/khach-hang" component={ViewCustomer} exact/>
           <Route path="/admin/hoa-don" component={ViewBill} exact/>
+          <Route path="/admin/hoa-don/them-moi" component={ViewAddNewBillDesktop} exact/>
           <Route path="/admin/phieu-bao-hanh" component={ViewInsurances} exact/>
         </>
       )}

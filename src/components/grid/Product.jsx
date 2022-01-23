@@ -13,7 +13,6 @@ import {
 import {
   DataGrid,
   GridToolbar, GridActionsCellItem,
-  useGridApiRef,
 } from '@mui/x-data-grid';
 
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -35,7 +34,6 @@ const GridProduct = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   // Variable component
-  const apiRef = useGridApiRef();
 
   // Variable store
 
@@ -220,10 +218,6 @@ const GridProduct = (props) => {
             columns={columns}
             components={{
               Toolbar: GridToolbar,
-            }}
-            apiRef={apiRef}
-            componentsProps={{
-              toolbar: {apiRef},
             }}
             onCellEditCommit={handleCellEditCommit}
           />

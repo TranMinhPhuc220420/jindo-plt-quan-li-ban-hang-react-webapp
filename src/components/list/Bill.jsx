@@ -152,7 +152,7 @@ const ListBill = (props) => {
                 </Typography>
 
                 <Typography>
-                  Ngày xuất: {Moment(dataItem.created_at).format('DD-MM-yyyy')}
+                  Ngày bán: {Moment(dataItem.date_sell).format('DD-MM-yyyy')}
                 </Typography>
                 {dataItem.note !== '' && (
                   <Typography>

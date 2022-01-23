@@ -19,45 +19,39 @@ import EditIcon from '@material-ui/icons/Edit';
 
 // PLT Solution
 import PltCommon from "../../plt_common";
-import { setAppOpenDialogEdit, setAppSnackBar, setDataCategorys } from "../../store/action";
+import { setAppOpenDialogEdit, setAppSnackBar, setDataCustomers } from "../../store/action";
 import { MyUtils } from "../../utils";
 import PltLang from "../../plt_lang";
-import CategoryRequest from "../../requests/Category";
+import CustomerRequest from "../../requests/Customer";
 
 // Utils mores
 import Moment from 'moment';
 
 
 // Main this component
-const GridCagegory = (props) => {
+const GridCustomer = (props) => {
   const dispatch = useDispatch();
   // Variable component
 
   // Variable store
 
-  const dataCategorys = useSelector(state => {
-    const data = state.data.categorys;
-    const keySearch = state.app.key_search;
-
-    if (!keySearch || keySearch === '') {
-      return data;
-    }
-
-    const dataFind = [];
-    for (let i = 0; i < data.length; i++) {
-      const item = data[i];
-      if (PltCommon.subStrToLowWidthSpace(item.name).indexOf(keySearch) !== -1) {
-        dataFind.push(item);
-      }
-    }
-
-    return dataFind;
-  });
+  const dataCustomer = useSelector(state => state.data.customers);
   const gridIsLoading = useSelector(state => state.app.grid_is_loading);
 
   const columns = [
     { field: 'id', headerName: '#ID' },
     { field: 'name', headerName: 'Tên loại', flex: 1 },
+    {
+      field: 'phone',
+      type: 'actions',
+      headerName: 'Số điện thoại',
+      getActions: ({ id }) => {
+        const data = getCustomerByID(id);
+        return [
+          <a href={`tel:${data.phone}`}>{data.phone}</a>
+        ]
+      }
+    },
     {
       field: 'created_at', headerName: 'Ngày tạo', width: 150,
       valueFormatter: (params) => {
@@ -96,9 +90,9 @@ const GridCagegory = (props) => {
   ];
 
   // Methods
-  const getCategoryByID = (id) => {
-    for (let i = 0; i < dataCategorys.length; i++) {
-      const item = dataCategorys[i];
+  const getCustomerByID = (id) => {
+    for (let i = 0; i < dataCustomer.length; i++) {
+      const item = dataCustomer[i];
       
       if (item.id === id) {
         return item
@@ -117,7 +111,7 @@ const GridCagegory = (props) => {
   };
 
   const handlerClickEdit = (idEdit) => {
-    const dataEdit = getCategoryByID(idEdit);
+    const dataEdit = getCustomerByID(idEdit);
     dispatch(setAppOpenDialogEdit({
       is_show: true,
       dataEdit: dataEdit
@@ -134,7 +128,7 @@ const GridCagegory = (props) => {
           const formData = new FormData();
           formData.append('id', idEdit);
           showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
-          const result = await CategoryRequest.delete(formData);
+          const result = await CustomerRequest.delete(formData);
           showSnack('', '', false);
 
           if (result) {
@@ -151,8 +145,8 @@ const GridCagegory = (props) => {
     showSnack(PltLang.getMsg('TXT_DELETE_SUCCESS'), 'text-success', true);
     dispatch(setAppOpenDialogEdit(false));
 
-    CategoryRequest.getAll().then(data => {
-      dispatch(setDataCategorys(data));
+    CustomerRequest.getAll().then(data => {
+      dispatch(setDataCustomers(data));
     });
   };
   const handlerDeleteFail = () => {
@@ -164,7 +158,7 @@ const GridCagegory = (props) => {
   // Return content this component
   return (
     <>
-      {dataCategorys.length === 0 && (
+      {dataCustomer.length === 0 && (
         PltLang.getMsg('TXT_DATA_EMPTY')
       )}
 
@@ -177,7 +171,7 @@ const GridCagegory = (props) => {
 
           <DataGrid
             style={{backgroundColor: '#fff'}}
-            rows={dataCategorys}
+            rows={dataCustomer}
             columns={columns}
             components={{
               Toolbar: GridToolbar,
@@ -190,4 +184,4 @@ const GridCagegory = (props) => {
   )
 };
 
-export default GridCagegory;
+export default GridCustomer;

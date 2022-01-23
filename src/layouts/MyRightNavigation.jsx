@@ -26,6 +26,12 @@ const MyLeftNavigation = () => {
   const dispatch = useDispatch();
 
   const overNavLeft = useSelector(((state) => state.ui.open_nav_left));
+  const viewActive = useSelector(state => state.app.view_active);
+  const viewProfile = {
+    name: 'Hồ sơ',
+    pathname: '/admin/ho-so',
+    icon: 'account_circle',
+  };
 
   const handlerCloseNavLeft = () => {
     dispatch(setUiOpenNavLeft(false));
@@ -47,11 +53,19 @@ const MyLeftNavigation = () => {
     window.location.reload();
   };
 
+  const isViewActive = (view) => {
+    return (viewActive.pathname == view.pathname);
+  };
+
   return (
     <Drawer anchor="right" open={overNavLeft} onClose={handlerCloseNavLeft}>
       <div role="presentation">
         <List>
-          <ListItem button onClick={handlerClickItemMenu}>
+          <ListItem className={isViewActive(viewProfile) ? 'menu-active' : ''}
+                    button
+                    onClick={() => {
+                      handlerClickItemMenu(viewProfile)
+                    }}>
             <ListItemAvatar>
               <Avatar src={`${DOMAIN_APP}/images/avatar/default.png`}/>
             </ListItemAvatar>
@@ -68,7 +82,11 @@ const MyLeftNavigation = () => {
 
           <Divider/>
           {PltMenu.getMenu().map((menuItem, index) => (
-            <ListItem button onClick={() => handlerClickItemMenu(menuItem)} key={index}>
+            <ListItem
+              button
+              className={isViewActive(menuItem) ? 'menu-active' : ''}
+              onClick={() => handlerClickItemMenu(menuItem)} key={index}
+            >
               <ListItemIcon>
                 <Icon>{menuItem.icon}</Icon>
               </ListItemIcon>

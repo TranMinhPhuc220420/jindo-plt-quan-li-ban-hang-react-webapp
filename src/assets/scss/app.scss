@@ -21,3 +21,11 @@
 .title-item-list {
   font-size: 1.2rem;
 }
+
+.menu-active {
+  .material-icons, .MuiListItemText-root {
+    color: #fff !important;
+  }
+
+  background-color: #007bff !important;
+}

@@ -42,4 +42,5 @@ ReactDOM.render(
   , document.getElementById('app'));
 
 serviceWorkerRegistration.register();
+// serviceWorkerRegistration.unregister();
 reportWebVitals();

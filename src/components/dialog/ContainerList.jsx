@@ -34,7 +34,9 @@ const DialogContainerList = (props) => {
   };
 
   const handleClose = () => {
-    props.onClose();
+    if (props.onClose) {
+      props.onClose();
+    }
   };
   // End methods *******************
 

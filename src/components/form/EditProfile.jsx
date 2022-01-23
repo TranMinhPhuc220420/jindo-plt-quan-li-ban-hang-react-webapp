@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
-import {setAppOpenDialogAddNew, setAppSnackBar, setDataCustomers} from "../../store/action";
+import {setAppSnackBar, setAppOpenDialogEdit} from "../../store/action";
 
 // Component Material UI
 import {
@@ -19,12 +19,14 @@ import PltLang from "../../plt_lang";
 import jQuery from "jquery";
 import PltCommon from "../../plt_common";
 import {MyUtils} from "../../utils";
-import CustomerRequest from "../../requests/Customer";
+import AdminRequest from "../../requests/admin";
 
 // Main this component
-const FormAddNewCustomer = (props) => {
+const FormEditProfile = (props) => {
   const dispatch = useDispatch();
   // Variable component
+  const [pw_new, setPWNew] = useState('');
+  const [pw_confirm, setPWConfirm] = useState('');
 
   // Variable store
 
@@ -36,20 +38,16 @@ const FormAddNewCustomer = (props) => {
    * @param event
    */
   const validateAndGetFormData = (event) => {
-    const form = jQuery(event.target);
-    const nameCustomer = form.find(':input[name=\'name_customer\']').val().trim();
-    const phoneCustomer = form.find(':input[name=\'phone_customer\']').val().trim();
-
-    if (PltCommon.isStrEmpty(nameCustomer)) {
+    if (PltCommon.isStrEmpty(pw_new)) {
       return false;
     }
-    if (PltCommon.isStrEmpty(phoneCustomer)) {
+    if (PltCommon.isStrEmpty(pw_confirm)) {
       return false;
     }
 
     const formData = new FormData();
-    formData.append('name', nameCustomer);
-    formData.append('phone', phoneCustomer);
+    formData.append('password', pw_new);
+    formData.append('password_confirmed', pw_confirm);
 
     return formData;
   };
@@ -64,10 +62,10 @@ const FormAddNewCustomer = (props) => {
   };
 
   /**
-   * handlerSubmitAddNew
+   * handlerSubmitEdit
    * @param event
    */
-  const handlerSubmitAddNew = async (event) => {
+  const handlerSubmitEdit = async (event) => {
     event.preventDefault();
 
     const formData = validateAndGetFormData(event);
@@ -77,51 +75,62 @@ const FormAddNewCustomer = (props) => {
         PltLang.getMsg('TITLE_VALIDATE_FORM_FAIL'),
         PltLang.getMsg('TXT_DESCRIPTION_VALIDATE_FORM_FAIL')
       );
-      dispatch(setAppOpenDialogAddNew(false));
+      dispatch(setAppOpenDialogEdit(false));
     } else {
       showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
       // Call request add new category
-      const result = await CustomerRequest.create(formData);
+      const result = await AdminRequest.update(formData);
       showSnack('', '', false);
 
       if (result != null) {
-        handlerAddNewSuccess();
+        handlerEditSuccess();
       } else {
-        handlerAddNewFail();
+        handlerEditFail();
       }
     }
   };
 
-  const handlerAddNewSuccess = () => {
-    showSnack(PltLang.getMsg('TXT_CREATE_NEW_SUCCESS'), 'text-success', true);
-    dispatch(setAppOpenDialogAddNew(false));
+  const handlerEditSuccess = async () => {
+    showSnack(PltLang.getMsg('TXT_UPDATE_SUCCESS'), 'text-success', true);
+    dispatch(setAppOpenDialogEdit(false));
 
-    CustomerRequest.getAll().then(data => {
-      dispatch(setDataCustomers(data));
-    });
+    await AdminRequest.logout();
+    window.location.reload();
   };
-  const handlerAddNewFail = () => {
-    showSnack(PltLang.getMsg('TXT_CREATE_NEW_FAILD'), 'text-error', true);
-    dispatch(setAppOpenDialogAddNew(false));
+  const handlerEditFail = () => {
+    showSnack(PltLang.getMsg('TXT_UPDATE_FAILD'), 'text-error', true);
+    dispatch(setAppOpenDialogEdit(false));
   };
 
   // Return content this component
   return (
-    <form onSubmit={handlerSubmitAddNew}>
+    <form onSubmit={handlerSubmitEdit}>
       <Card>
         <CardContent>
           <FormControl className={'w-100'}>
-            <TextField id="name_customer" name="name_customer" label={PltLang.getMsg('LABEL_INPUT_NAME_CUSTOMER')}/>
+            <TextField
+              label={PltLang.getMsg('LABEL_INPUT_PASSWORD_NEW')}
+              value={pw_new}
+              onChange={(event) => {
+                setPWNew(event.target.value)
+              }}
+            />
           </FormControl>
 
           <FormControl className={'w-100 mt-4'}>
-            <TextField id="phone_customer" name="phone_customer" label={PltLang.getMsg('LABEL_INPUT_PHONE_CUSTOMER')}/>
+            <TextField
+              label={PltLang.getMsg('LABEL_INPUT_PASSWORD_CONFIRM')}
+              value={pw_confirm}
+              onChange={(event) => {
+                setPWConfirm(event.target.value)
+              }}
+            />
           </FormControl>
 
         </CardContent>
         <CardActions className="justify-content-end">
           <Button type="submit" variant="contained" color="primary">
-            {PltLang.getMsg('TXT_BTN_ADD_NEW')}
+            {PltLang.getMsg('TXT_BTN_UPDATE')}
           </Button>
         </CardActions>
       </Card>
@@ -129,4 +138,4 @@ const FormAddNewCustomer = (props) => {
   )
 };
 
-export default FormAddNewCustomer;
+export default FormEditProfile;

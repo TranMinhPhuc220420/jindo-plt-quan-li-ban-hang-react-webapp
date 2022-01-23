@@ -1,5 +1,6 @@
 // Main import need
 import React, {useState, useEffect} from "react";
+import {useHistory} from 'react-router-dom';
 
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -7,7 +8,7 @@ import {
   setAppOpenDialogAddNew,
   setAppSnackBar,
   setDataBills,
-  setDataCategorys, setDataInsurancess,
+  setDataInsurancess,
   setDataProducts, setDataCustomers
 } from "../../store/action";
 
@@ -27,27 +28,29 @@ import IconDelete from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // PLT Solution
+import DialogContainerList from "../dialog/ContainerList";
+import ListSelectProduct from "../list/SelectProduct";
 
-// Utils mores
-import Moment from 'moment';
 import PltLang from "../../plt_lang";
 import PltCommon from "../../plt_common";
 import {MyUtils} from "../../utils";
-import DialogContainerForm from "../dialog/ContainerForm";
-import DialogContainerList from "../dialog/ContainerList";
-import ListSelectProduct from "../list/SelectProduct";
 import {DOMAIN_APP} from "../../constant";
-import currencyFormatter from "currency-formatter";
 import BillRequest from "../../requests/Bill";
 import ProductRequest from "../../requests/Product";
 import InsurancesRequest from "../../requests/Insurances";
 import CustomerRequest from "../../requests/Customer";
 
+// Utils mores
+import currencyFormatter from "currency-formatter";
+import Moment from 'moment';
+
 // Main this component
 const FormAddNewBill = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   // Variable component
+  const [isMobile, setIsMobile] = useState(PltCommon.isMobile);
   const [openDialogListProcduct, setOpenDialogListProcduct] = useState(false);
   const [hasCustomerInData, setHasCustomerInData] = useState(false);
   const [customerSelectedInData, setCustomerSelectedInData] = useState({name: '', phone: ''});
@@ -55,6 +58,12 @@ const FormAddNewBill = (props) => {
   const [name_customer, setNameCustomer] = useState('');
   const [phone_customer, setPhoneCustomer] = useState('');
   const [category_id, setCategoryId] = useState('');
+  const [date_sell, setDateSell] = useState(
+    Moment().format('yyyy-MM-DD')
+  );
+  const [time_sell, setTimeSell] = useState(
+    Moment().format('hh:mm')
+  );
   const [list_products, setListProduct] = useState([]);
   const [note, setNote] = useState('');
   const heightAuto = PltCommon.getHeightBody() - (64);
@@ -84,21 +93,22 @@ const FormAddNewBill = (props) => {
     formData.append('has_customer_in_data', hasCustomerInData);
     formData.append('total_price', getCountPrice());
     formData.append('total_discount', getCountDicount());
+    formData.append('date_sell', `${date_sell} ${time_sell}`);
 
     if (hasCustomerInData) {
       if (PltCommon.isStrEmpty(customer_id)) {
-        return false;
+        return {result: false, formData: null, mess: 'Khách hàng đang trống'};
       } else {
         formData.append('customer_id', customer_id);
       }
     } else {
       if (PltCommon.isStrEmpty(name_customer)) {
-        return false;
+        return {result: false, formData: null, mess: 'Tên khách hàng đang trống'};
       } else {
         formData.append('name_customer', name_customer);
       }
       if (PltCommon.isStrEmpty(phone_customer)) {
-        return false;
+        return {result: false, formData: null, mess: 'Số điện thoại khách hàng đang trống'};
       } else {
         formData.append('phone_customer', phone_customer);
       }
@@ -107,7 +117,7 @@ const FormAddNewBill = (props) => {
     formData.append('note', note);
 
     if (list_products.length === 0) {
-      return false;
+      return {result: false, formData: null, mess: 'Hoá đơn không có sản phẩm được chọn'};
     } else {
       const arrProductId = [];
 
@@ -130,7 +140,7 @@ const FormAddNewBill = (props) => {
     // total_discount
 
 
-    return formData;
+    return {result: true, formData: formData, mess: 'success'};
   };
 
   const showSnack = (text, color, isShow, time) => {
@@ -144,12 +154,13 @@ const FormAddNewBill = (props) => {
 
   const handlerSubmit = async (event) => {
     event.preventDefault();
-    const formData = validateAndGetFormData();
+    const {result, formData, mess} = validateAndGetFormData();
+    console.log(mess)
 
-    if (formData === false) {
+    if (formData == null) {
       MyUtils.Alter.showError(
         PltLang.getMsg('TITLE_VALIDATE_FORM_FAIL'),
-        PltLang.getMsg('TXT_DESCRIPTION_VALIDATE_FORM_FAIL')
+        mess
       );
       dispatch(setAppOpenDialogAddNew(false));
     } else {
@@ -168,7 +179,6 @@ const FormAddNewBill = (props) => {
 
   const handlerAddNewSuccess = () => {
     showSnack(PltLang.getMsg('TXT_CREATE_NEW_SUCCESS'), 'text-success', true);
-    dispatch(setAppOpenDialogAddNew(false));
 
     BillRequest.getAll().then(data => {
       dispatch(setDataBills(data));
@@ -186,11 +196,21 @@ const FormAddNewBill = (props) => {
       });
     }
 
+    if (!isMobile) {
+      history.push('/admin/hoa-don')
+    } else {
+      dispatch(setAppOpenDialogAddNew(false));
+    }
   };
 
   const handlerAddNewFail = () => {
     showSnack(PltLang.getMsg('TXT_CREATE_NEW_FAILD'), 'text-error', true);
-    dispatch(setAppOpenDialogAddNew(false));
+
+    if (!isMobile) {
+      history.push('/admin/hoa-don')
+    } else {
+      dispatch(setAppOpenDialogAddNew(false));
+    }
   };
 
   const handlerChangeCheckBox = (event) => {
@@ -342,6 +362,31 @@ const FormAddNewBill = (props) => {
               </>
             )}
           </div>
+
+          <div className="mb-4">
+            <FormControl>
+              <TextField label={PltLang.getMsg('LABEL_INPUT_DATE_SELL')}
+                         variant="outlined"
+                         type={'date'}
+                         value={date_sell}
+                         onChange={(event) => {
+                           let value = Moment(event.target.value).format('yyyy-MM-DD');
+                           setDateSell(value);
+                         }}
+              />
+            </FormControl>
+            <FormControl>
+              <TextField label={PltLang.getMsg('LABEL_INPUT_TIME_SELL')}
+                         variant="outlined"
+                         type={'time'}
+                         value={time_sell}
+                         onChange={(event) => {
+                           setTimeSell(event.target.value);
+                         }}
+              />
+            </FormControl>
+          </div>
+
           <div className="mb-4">
             <div className="title d-flex justify-content-between align-items-center">
               <h6 className={''}>
@@ -360,7 +405,7 @@ const FormAddNewBill = (props) => {
               </Button>
             </div>
             <List>
-            {list_products.map((itemData, index) => (
+              {list_products.map((itemData, index) => (
                 <ListItem key={index}>
                   <Accordion className="w-100">
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
@@ -443,7 +488,7 @@ const FormAddNewBill = (props) => {
                     </AccordionActions>
                   </Accordion>
                 </ListItem>
-            ))}
+              ))}
             </List>
           </div>
 
@@ -480,17 +525,17 @@ const FormAddNewBill = (props) => {
                   {PltLang.getMsg('TXT_COUNT_PRODUCT_BILL')}: {list_products.length}
                 </Typography>
                 <Typography inputMode={'text'}>
-                  {PltLang.getMsg('TXT_COUNT_PRICE_BILL')}: {currencyFormatter.format(getCountPrice(), { code: 'VND' })}
+                  {PltLang.getMsg('TXT_COUNT_PRICE_BILL')}: {currencyFormatter.format(getCountPrice(), {code: 'VND'})}
                 </Typography>
                 <Typography inputMode={'text'}>
-                  {PltLang.getMsg('TXT_COUNT_PRICE_DISCOUNT_BILL')}: {currencyFormatter.format(getCountDicount(), { code: 'VND' })}
+                  {PltLang.getMsg('TXT_COUNT_PRICE_DISCOUNT_BILL')}: {currencyFormatter.format(getCountDicount(), {code: 'VND'})}
                 </Typography>
                 <Typography inputMode={'text'}>
                   {PltLang.getMsg('TXT_COUNT_PRODUCT_HAS_INSURANCES')}: {getCountInsurances()}
                 </Typography>
                 <Typography className={'mt-3'} inputMode={'text'}>
                   <strong>{PltLang.getMsg('TXT_COUNT_PRICE_PAY_BILL')}:</strong>
-                  <span> {currencyFormatter.format((getCountPrice() - getCountDicount()), { code: 'VND' })} </span>
+                  <span> {currencyFormatter.format((getCountPrice() - getCountDicount()), {code: 'VND'})} </span>
                 </Typography>
               </CardContent>
             </Card>

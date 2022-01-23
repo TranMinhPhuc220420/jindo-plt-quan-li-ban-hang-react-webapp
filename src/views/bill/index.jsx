@@ -9,6 +9,7 @@ import PltCommon from "../../plt_common";
 
 // Component Plt Solution
 import ViewBillMobile from "./mobile";
+import ViewBillDesktop from "./desktop";
 
 // Utils others
 
@@ -28,6 +29,9 @@ const ViewBill = () => {
     <div className={'container'} style={{height: heightAuto}}>
       {isMobile && (
         <ViewBillMobile/>
+      )}
+      {!isMobile && (
+        <ViewBillDesktop/>
       )}
     </div>
   )

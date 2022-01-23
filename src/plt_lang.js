@@ -31,6 +31,7 @@ const PltLang = {
     TXT_CATEGORY: 'Loại sản phẩm',
     TITLE_DIALOG_LIST_PRODUCT: 'Chọn sản phẩm',
     TXT_RESULT: 'Kết quả',
+    TXT_BIll: 'Hoá đơn',
     TXT_PREVIEW_BILL: 'Tóm tắc thanh toán',
     LABEL_INPUT_USERNAME: 'Tên đăng nhập',
     LABEL_INPUT_PASSWORD: 'Mật khẩu',
@@ -52,9 +53,13 @@ const PltLang = {
     LABEL_INPUT_PHONE_CUSTOMER: 'Số điện thoại khách hàng',
     LABEL_CHECKBOX_HAS_CUSTOMER_IN_DATA: 'Đã có dữ liệu khách hàng',
     LABEL_INPUT_DISCOUNT: 'Giá giảm',
+    LABEL_INPUT_DATE_SELL: 'Ngày bán',
+    LABEL_INPUT_TIME_SELL: 'Giờ bán',
     LABEL_CHECKBOX_HAS_INSURANCES: 'Có bảo hành',
     LABEL_INPUT_TO_DATE_INSURANCES: 'Số tháng bảo hàng',
     LABEL_INPUT_NOTE: 'Ghi chú',
+    LABEL_INPUT_PASSWORD_NEW: 'Mật khẩu mới',
+    LABEL_INPUT_PASSWORD_CONFIRM: 'Mật khẩu cũ',
   },
 
   /**
