@@ -52,12 +52,23 @@ export const setAppOpenDialogAddNew = (isOpen) => {
 };
 /**
  * setAppOpenDialogEdit
- * @param {boolean} isOpen
+ * @param {object} payload
  * @returns {{payload: *, type: string}}
  */
 export const setAppOpenDialogEdit = (payload) => {
   return {
     type: typeAction.SET_APP_OPEN_DIALOG_EDIT,
+    payload: payload
+  }
+};
+/**
+ * setAppOpenDialogDetail
+ * @param {object} payload
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppOpenDialogDetail = (payload) => {
+  return {
+    type: typeAction.SET_APP_OPEN_DIALOG_DETAIL,
     payload: payload
   }
 };

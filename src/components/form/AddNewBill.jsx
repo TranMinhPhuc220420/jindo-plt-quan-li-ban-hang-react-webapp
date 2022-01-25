@@ -56,7 +56,7 @@ const FormAddNewBill = (props) => {
   const [customerSelectedInData, setCustomerSelectedInData] = useState({name: '', phone: ''});
   const [customer_id, setCustomerId] = useState('');
   const [name_customer, setNameCustomer] = useState('');
-  const [phone_customer, setPhoneCustomer] = useState('');
+  const [phone_customer, setPhoneCustomer] = useState(PltLang.getMsg('TXT_NOT_USE'));
   const [category_id, setCategoryId] = useState('');
   const [date_sell, setDateSell] = useState(
     Moment().format('yyyy-MM-DD')
@@ -108,10 +108,11 @@ const FormAddNewBill = (props) => {
         formData.append('name_customer', name_customer);
       }
       if (PltCommon.isStrEmpty(phone_customer)) {
-        return {result: false, formData: null, mess: 'Số điện thoại khách hàng đang trống'};
-      } else {
-        formData.append('phone_customer', phone_customer);
+        // return {result: false, formData: null, mess: 'Số điện thoại khách hàng đang trống'};
+        setPhoneCustomer(PltLang.getMsg('TXT_NOT_USE'));
       }
+
+      formData.append('phone_customer', phone_customer);
     }
     // if (PltCommon.isStrEmpty(note))
     formData.append('note', note);
@@ -155,14 +156,12 @@ const FormAddNewBill = (props) => {
   const handlerSubmit = async (event) => {
     event.preventDefault();
     const {result, formData, mess} = validateAndGetFormData();
-    console.log(mess)
-
     if (formData == null) {
       MyUtils.Alter.showError(
         PltLang.getMsg('TITLE_VALIDATE_FORM_FAIL'),
         mess
       );
-      dispatch(setAppOpenDialogAddNew(false));
+      // dispatch(setAppOpenDialogAddNew(false));
     } else {
       showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
       // Call request add new category

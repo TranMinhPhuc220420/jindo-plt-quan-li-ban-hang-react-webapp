@@ -18,6 +18,10 @@ const STATE = {
       is_show: false,
       dataEdit: null
     },
+    open_dialog_detail: {
+      is_show: false,
+      dataDetail: null
+    },
     open_dialog_delete: {
       is_show: false,
       dataDelete: null
@@ -61,6 +65,9 @@ const reducer = (state = STATE, action) => {
       break;
     case actions.SET_APP_OPEN_DIALOG_EDIT:
       stateNew.app.open_dialog_edit = payload;
+      break;
+    case actions.SET_APP_OPEN_DIALOG_DETAIL:
+      stateNew.app.open_dialog_detail = payload;
       break;
     case actions.SET_APP_SNACK_BAR:
       stateNew.app.snack_bar = payload;

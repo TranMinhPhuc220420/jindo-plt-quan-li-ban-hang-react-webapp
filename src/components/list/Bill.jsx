@@ -31,6 +31,7 @@ import InsurancesRequest from "../../requests/Insurances";
 import Moment from 'moment';
 // var currencyFormatter = require('currency-formatter');
 import currencyFormatter from 'currency-formatter';
+import ItemListBill from "../itemList/ItemListBill";
 
 // Main this component
 const ListBill = (props) => {
@@ -131,56 +132,8 @@ const ListBill = (props) => {
         PltLang.getMsg('TXT_DATA_EMPTY')
       )}
       {dataBills.map((dataItem, index) => (
-        <div key={index}>
-          <ListItem>
-            <div style={{width: '80%'} }>
-              <ListItemText>
-                <Typography variant="h6">
-                  {dataItem.customer.name}
-                </Typography>
-                <Typography>
-                  Sản phẩm: {dataItem.productions.length}
-                </Typography>
-                <Typography>
-                  Phiếu bảo hành: {dataItem.insurances.length}
-                </Typography>
-                <Typography>
-                  Giảm: {currencyFormatter.format(dataItem.total_discount, { code: 'VND' })}
-                </Typography>
-                <Typography>
-                  Tổng: {currencyFormatter.format(dataItem.total_price, { code: 'VND' })}
-                </Typography>
-
-                <Typography>
-                  Ngày bán: {Moment(dataItem.date_sell).format('DD-MM-yyyy')}
-                </Typography>
-                {dataItem.note !== '' && (
-                  <Typography>
-                    Ghi chú: {dataItem.note}
-                  </Typography>
-                )}
-              </ListItemText>
-            </div>
-
-            <ListItemSecondaryAction>
-              {/*<IconButton edge="end" aria-label="edit" className={'mr-1'}*/}
-              {/*            onClick={() => {*/}
-              {/*              handlerClickEdit(dataItem)*/}
-              {/*            }}*/}
-              {/*>*/}
-              {/*  <EditIcon/>*/}
-              {/*</IconButton>*/}
-              <IconButton edge="end" aria-label="delete" color={'secondary'}
-                          onClick={() => {
-                            handlerClickDelete(dataItem)
-                          }}
-              >
-                <DeleteIcon/>
-              </IconButton>
-            </ListItemSecondaryAction>
-
-          </ListItem>
-          <Divider/>
+        <div className="mb-2 my-shadow" key={index}>
+          <ItemListBill dataItem={dataItem}/>
         </div>
       ))}
     </List>

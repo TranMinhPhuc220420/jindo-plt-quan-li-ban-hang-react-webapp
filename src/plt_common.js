@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import jQuery from 'jquery';
 
 import * as constant from './constant';
+import currencyFormatter from "currency-formatter";
 
 const PltCommon = {
   getAccessTokenUserCooke: async () => {
@@ -121,6 +122,10 @@ const PltCommon = {
 
   getFileUrlTemp(file) {
     return (window.URL || window.webkitURL).createObjectURL(file);
+  },
+
+  formatVietnamMoney(value) {
+    return currencyFormatter.format(value, {code: 'VND'});
   }
 };
 
