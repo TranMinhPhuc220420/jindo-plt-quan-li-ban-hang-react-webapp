@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Moment from 'moment';
 import {DOMAIN_APP} from "../../constant";
 import currencyFormatter from "currency-formatter";
+import PltCommon from "../../plt_common";
 
 // Main this component
 const ItemListBill = (props) => {
@@ -105,7 +106,11 @@ const ItemListBill = (props) => {
                 <td>Thành tiền:</td>
                 <td>
                   <span className="total-price">
-                    {currencyFormatter.format(props.dataItem.total_price, {code: 'VND'})}
+                    {
+                      PltCommon.formatVietnamMoney(
+                        PltCommon.getCountPriceBill(props.dataItem, true)
+                      )
+                    }
                   </span>
                 </td>
               </tr>

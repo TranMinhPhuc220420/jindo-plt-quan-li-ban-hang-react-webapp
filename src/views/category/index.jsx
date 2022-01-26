@@ -28,7 +28,7 @@ const ViewCategory = () => {
 
   //Component return view
   return (
-    <div className={'container'} style={{height: heightAuto}}>
+    <div style={{height: heightAuto}}>
       {isMobile && (
         <ViewCategoryMobile/>
       )}

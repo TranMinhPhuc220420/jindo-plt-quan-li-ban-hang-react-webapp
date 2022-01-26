@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   setAppGridIsLoading,
-  setDataInsurancess,
+  setDataInsurances,
 } from "../../store/action";
 
 // Component Material UI
@@ -24,6 +24,8 @@ import PltCommon from "../../plt_common";
 
 import InsurancesRequest from "../../requests/Insurances";
 import GridInsurance from "../../components/grid/Insurance";
+import DialogContainerDetail from "../../components/dialog/ContainerDetail";
+import PanelDetailInsurances from "../../components/panel/DetailInsurances";
 
 // Main this component
 const ViewInsurancesDesktop = (props) => {
@@ -32,6 +34,7 @@ const ViewInsurancesDesktop = (props) => {
   // Variable component
 
   // Variable store
+  const openDialogDetail = useSelector(state => state.app.open_dialog_detail);
 
   // Methods
   const handlerShowDialogAddNew = () => {
@@ -41,7 +44,7 @@ const ViewInsurancesDesktop = (props) => {
   const handlerRefreshData = () => {
     dispatch(setAppGridIsLoading(true));
     InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+      dispatch(setDataInsurances(data));
       dispatch(setAppGridIsLoading(false));
     });
   };
@@ -75,6 +78,12 @@ const ViewInsurancesDesktop = (props) => {
       </div>
 
       <GridInsurance/>
+
+      {openDialogDetail.is_show && (
+        <DialogContainerDetail fullScreen={false} open={openDialogDetail.is_show} title={PltLang.getMsg('TITLE_DIALOG_DETAIL')}>
+          <PanelDetailInsurances dataDetail={openDialogDetail.dataDetail}/>
+        </DialogContainerDetail>
+      )}
     </>
   )
 };

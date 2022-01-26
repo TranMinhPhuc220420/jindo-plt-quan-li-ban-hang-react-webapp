@@ -11,12 +11,17 @@ import {
 } from '@material-ui/core';
 import {setAppOpenDialogAddNew, setAppOpenDialogDetail, setAppOpenDialogEdit} from "../../store/action";
 import CloseIcon from "@material-ui/icons/Close";
+import PltCommon from "../../plt_common";
 
 // PLT Solution
 
 // Make styles
 const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />;
+  let direction = 'up';
+  if (PltCommon.isMobile()) {
+    direction = 'left';
+  }
+  return <Slide direction={direction} ref={ref} {...props} />;
 });
 
 // Utils mores

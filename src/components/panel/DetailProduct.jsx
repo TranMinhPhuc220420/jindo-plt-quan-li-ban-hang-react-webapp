@@ -23,7 +23,7 @@ import {
   setAppSnackBar,
   setDataBills,
   setDataCategorys,
-  setDataInsurancess
+  setDataInsurances
 } from "../../store/action";
 import CategoryRequest from "../../requests/Category";
 import PltLang from "../../plt_lang";

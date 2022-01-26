@@ -7,7 +7,7 @@ import {useSelector, useDispatch} from 'react-redux';
 // Component Material UI
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction,
-  Divider, Typography, IconButton
+  Divider, Typography, IconButton, LinearProgress
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -20,6 +20,8 @@ import {MyUtils} from "../../utils";
 import PltLang from "../../plt_lang";
 import CategoryRequest from "../../requests/Category";
 import Moment from "moment";
+import ItemListProduct from "../itemList/ItemListProduct";
+import ItemListInsurance from "../itemList/ItemListInsurance";
 
 // Utils mores
 
@@ -50,6 +52,7 @@ const ListInsurances = (props) => {
 
     return dataFind;
   });
+  const isLoadingInsurances = useSelector(state => state.app.is_loading_insurances);
 
   // Methods
   const showSnack = (text, color, isShow, time) => {
@@ -108,50 +111,30 @@ const ListInsurances = (props) => {
   // Return content this component
   return (
     <List>
-      {dataInsurances.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
-      {dataInsurances.map((dataItem, index) => (
-        <div key={index}>
-          <ListItem>
-            <div>
-              <ListItemText>
-                <Typography variant="h6">
-                  {dataItem.bill.customer.name}
-                </Typography>
-                <Typography>
-                  Mã sản phẩm: {dataItem.production_id}
-                </Typography>
-                <Typography>
-                  Mã hoá đơn: {dataItem.bill.id}
-                </Typography>
-                <Typography>
-                   {PltLang.getMsg('LABEL_INPUT_TO_DATE_INSURANCES')}: {dataItem.to_date}
-                </Typography>
-              </ListItemText>
-            </div>
-
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="edit" className={'mr-1'}
-                          onClick={() => {
-                            handlerClickEdit(dataItem)
-                          }}
-              >
-                <AssignmentIcon/>
-              </IconButton>
-              {/*<IconButton edge="end" aria-label="delete" color={'secondary'}*/}
-              {/*            onClick={() => {*/}
-              {/*              handlerClickDelete(dataItem)*/}
-              {/*            }}*/}
-              {/*>*/}
-              {/*  <DeleteIcon/>*/}
-              {/*</IconButton>*/}
-            </ListItemSecondaryAction>
-
-          </ListItem>
-          <Divider/>
-        </div>
-      ))}
+      { isLoadingInsurances ?
+        (
+          <LinearProgress/>
+        )
+        :
+        (
+          <>
+            {dataInsurances.length == 0 ?
+              <span>
+                {PltLang.getMsg('TXT_DATA_EMPTY')}
+              </span>
+              :
+              <>
+                {dataInsurances.map((dataItem, index) => (
+                  <div key={index}>
+                    <ItemListInsurance dataInsurance={dataItem}/>
+                    <Divider/>
+                  </div>
+                ))}
+              </>
+            }
+          </>
+        )
+      }
     </List>
   )
 };

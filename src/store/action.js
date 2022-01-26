@@ -1,5 +1,8 @@
 import Cookies from 'js-cookie';
 
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-avataaars-sprites';
+
 import * as constant from '../constant';
 import * as typeAction from '../store/actionType';
 
@@ -95,13 +98,79 @@ export const setAppKeySearchItemList = (keySearch) => {
   }
 };
 /**
- * setAppSnackBar
- * @param {string} keySearch
+ * setAppGridIsLoading
+ * @param {boolean} isLoading
  * @returns {{payload: *, type: string}}
  */
 export const setAppGridIsLoading = (isLoading) => {
   return {
     type: typeAction.SET_APP_GRID_IS_LOADING,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingCategorys
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingCategorys = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_CATEGORYS,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingAllData
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingAllData = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_ALL_DATA,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingProducts
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingProducts = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_PRODUCTS,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingBills
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingBills = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_BILLS,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingInsurances
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingInsurances = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_INSURANCES,
+    payload: isLoading
+  }
+};
+/**
+ * setAppIsLoadingCustomers
+ * @param {boolean} isLoading
+ * @returns {{payload: *, type: string}}
+ */
+export const setAppIsLoadingCustomers = (isLoading) => {
+  return {
+    type: typeAction.SET_APP_IS_LOADING_CUSTOMERS,
     payload: isLoading
   }
 };
@@ -163,6 +232,15 @@ export const setDataProducts = (data) => {
  * @returns {{payload: *, type: string}}
  */
 export const setDataCustomers = (data) => {
+  data = data.map(item => {
+    item.svg_avatar = createAvatar(style, {
+      seed: item.name,
+      // ... and other options
+    });
+
+    return item;
+  });
+
   return {
     type: typeAction.SET_DATA_CUSTOMERS,
     payload: data
@@ -180,11 +258,11 @@ export const setDataBills = (data) => {
   }
 };
 /**
- * setDataInsurancess
+ * setDataInsurances
  * @param data
  * @returns {{payload: *, type: string}}
  */
-export const setDataInsurancess = (data) => {
+export const setDataInsurances = (data) => {
   return {
     type: typeAction.SET_DATA_INSURANCESS,
     payload: data

@@ -9,7 +9,7 @@ import {setAppOpenDialogDetail, setAppOpenDialogEdit, setAppSnackBar, setDataPro
 import {
   ListItem, ListItemText, Typography, ListItemSecondaryAction,
   Divider, Button,
-  Menu, MenuItem
+  Menu, MenuItem, ListItemAvatar
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -17,9 +17,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 // PLT Solution
 
 // Utils mores
-import Moment from 'moment';
 import {DOMAIN_APP} from "../../constant";
-import currencyFormatter from "currency-formatter";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {MyUtils} from "../../utils";
@@ -27,7 +25,7 @@ import PltLang from "../../plt_lang";
 import ProductRequest from "../../requests/Product";
 
 // Main this component
-const ItemListProduct = (props) => {
+const ItemListCustomer = (props) => {
   const dispatch = useDispatch();
   // Variable component
 
@@ -56,7 +54,7 @@ const ItemListProduct = (props) => {
   const handlerClickEdit = (dataEdit) => {
     dispatch(setAppOpenDialogEdit({
       is_show: true,
-      dataEdit: props.dataProduct
+      dataEdit: props.dataCustomer
     }));
 
     handleClose();
@@ -70,7 +68,7 @@ const ItemListProduct = (props) => {
       async (isConfirm) => {
         if (isConfirm === true) {
           const formData = new FormData();
-          formData.append('id', props.dataProduct.id);
+          formData.append('id', props.dataCustomer.id);
           showSnack(PltLang.getMsg('TXT_UPLOADING_DATA'), 'text-primary', true);
           const result = await ProductRequest.delete(formData);
           showSnack('', '', false);
@@ -102,22 +100,27 @@ const ItemListProduct = (props) => {
   };
 
   const handlerListItemClick = () => {
-    dispatch(setAppOpenDialogDetail({
-      is_show: true,
-      dataDetail: props.dataProduct
-    }));
+    // dispatch(setAppOpenDialogDetail({
+    //   is_show: true,
+    //   dataDetail: props.dataCustomer
+    // }));
   };
   // End methods *******************
 
   // Return content this component
   return (
-    <ListItem className="item-list-product" button onClick={handlerListItemClick}>
-      <ListItemText>
-        <Typography className="product-name product-name-vertical-2">
-          {props.dataProduct.name}
-        </Typography>
+    <ListItem className="item-list-customer" button onClick={handlerListItemClick}>
+      <ListItemAvatar>
+        <div dangerouslySetInnerHTML={{__html: props.dataCustomer.svg_avatar}}></div>
+      </ListItemAvatar>
 
-        <img style={{width: 50, height: 50}} src={DOMAIN_APP + props.dataProduct.image_url} alt=""/>
+      <ListItemText>
+        <Typography variant="h6">
+          Tên: {props.dataCustomer.name}
+        </Typography>
+        <Typography inputMode={'tel'}>
+          SĐT: <a href={`tel:${props.dataCustomer.phone}`}>{props.dataCustomer.phone}</a>
+        </Typography>
       </ListItemText>
 
       <ListItemSecondaryAction>
@@ -143,4 +146,4 @@ const ItemListProduct = (props) => {
   )
 };
 
-export default ItemListProduct;
+export default ItemListCustomer;

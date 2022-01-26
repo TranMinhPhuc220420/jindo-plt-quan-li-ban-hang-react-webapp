@@ -9,24 +9,23 @@ import {useSelector, useDispatch} from 'react-redux';
 import {
   LinearProgress
 } from '@material-ui/core';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import {
   DataGrid,
   GridToolbar, GridActionsCellItem,
 } from '@mui/x-data-grid';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 
 // PLT Solution
-import PltCommon from "../../plt_common";
-import {setAppOpenDialogEdit, setAppSnackBar, setDataCategorys, setDataInsurancess} from "../../store/action";
-import {MyUtils} from "../../utils";
+import {
+  setAppOpenDialogDetail,
+  setAppSnackBar,
+} from "../../store/action";
 import PltLang from "../../plt_lang";
 
 // Utils mores
 import Moment from 'moment';
-import InsurancesRequest from "../../requests/Insurances";
 
 // Main this component
 const GridInsurance = (props) => {
@@ -35,14 +34,33 @@ const GridInsurance = (props) => {
   // Variable component
 
   // Variable store
-
   const dataInsurances = useSelector(state => state.data.insurances);
   const gridIsLoading = useSelector(state => state.app.grid_is_loading);
 
   const columns = [
     {
       field: 'id',
-      headerName: '#ID'
+      headerName: '#ID',
+      width: 50,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({id}) => {
+        return [
+          <GridActionsCellItem
+            icon={<AssignmentIcon/>}
+            label="Detail"
+            className="text-primary"
+            onClick={() => {
+              handlerClickShowDetail(id)
+            }}
+          />
+        ];
+      }
     },
     {
       field: 'bill',
@@ -100,6 +118,15 @@ const GridInsurance = (props) => {
     }
     return null;
   };
+
+  const handlerClickShowDetail = (idEdit) => {
+    const insuranceShowDetail = getInsuranceByID(idEdit);
+    dispatch(setAppOpenDialogDetail({
+      is_show: true,
+      dataDetail: insuranceShowDetail
+    }));
+  };
+
   const showSnack = (text, color, isShow, time) => {
     if (!time) time = 3000;
     dispatch(setAppSnackBar({open: isShow, text: text, color: color}));

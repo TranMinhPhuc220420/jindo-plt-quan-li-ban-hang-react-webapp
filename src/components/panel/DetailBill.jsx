@@ -15,6 +15,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PrintIcon from '@material-ui/icons/Print';
 
 // PLT Solution
 
@@ -28,7 +29,7 @@ import {
   setAppSnackBar,
   setDataBills,
   setDataCategorys,
-  setDataInsurancess
+  setDataInsurances
 } from "../../store/action";
 import CategoryRequest from "../../requests/Category";
 import PltLang from "../../plt_lang";
@@ -108,6 +109,11 @@ const PanelDetailBill = (props) => {
     )
   };
 
+  const handlerClickPrint = async () => {
+    const accessToken = await PltCommon.getAccessTokenUserCooke();
+    window.open(`${DOMAIN_APP}/admin/hoa-don/in-hoa-don/${props.dataBill.id}/${accessToken}`);
+  };
+
   const handlerDeleteSuccess = () => {
     showSnack(PltLang.getMsg('TXT_DELETE_SUCCESS'), 'text-success', true);
     dispatch(setAppOpenDialogEdit(false));
@@ -116,7 +122,7 @@ const PanelDetailBill = (props) => {
       dispatch(setDataBills(data));
     });
     InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+      dispatch(setDataInsurances(data));
     });
   };
 
@@ -283,12 +289,20 @@ const PanelDetailBill = (props) => {
         </div>
       </CardContent>
 
-      <CardActions>
-        <Button variant="contained" color="secondary" className="w-100"
+      <CardActions className="justify-content-end">
+        <Button variant="contained" color="secondary" className="w-20"
                 onClick={handlerClickDelete}
         >
           <DeleteIcon/>
           {PltLang.getMsg('TXT_BTN_DELETE')}
+        </Button>
+        <Button variant="contained" color="primary" className="w-50"
+                onClick={handlerClickPrint}
+        >
+          <PrintIcon/>
+          <span className="ml-1">
+            {PltLang.getMsg('TXT_BTN_PRINT_BILL')}
+          </span>
         </Button>
       </CardActions>
     </div>

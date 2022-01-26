@@ -7,7 +7,7 @@ import {useSelector, useDispatch} from 'react-redux';
 // Component Material UI
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction,
-  Divider, Typography, IconButton
+  Divider, Typography, IconButton, LinearProgress
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -28,7 +28,7 @@ const ListCagegory = (props) => {
   // Variable component
 
   // Variable store
-
+  const isLoadingCategorys = useSelector(state => state.app.is_loading_categorys);
   const dataCategorys = useSelector(state => {
     const data = state.data.categorys;
     const keySearch = state.app.key_search;
@@ -105,9 +105,20 @@ const ListCagegory = (props) => {
   // Return content this component
   return (
     <List>
-      {dataCategorys.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
+      { isLoadingCategorys ?
+        (
+          <LinearProgress/>
+        )
+        :
+        (
+          <>
+            {dataCategorys.length === 0 && (
+              PltLang.getMsg('TXT_DATA_EMPTY')
+            )}
+          </>
+        )
+      }
+
       {dataCategorys.map((dataItem, index) => (
         <div key={index}>
           <ListItem>

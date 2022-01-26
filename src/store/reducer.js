@@ -32,7 +32,12 @@ const STATE = {
       color: ''
     },
     key_search: '',
-    grid_is_loading: false
+    grid_is_loading: false,
+    is_loading_categorys: false,
+    is_loading_products: false,
+    is_loading_bills: false,
+    is_loading_insurances: false,
+    is_loading_customers: false,
   },
   data: {
     categorys: [],
@@ -77,6 +82,28 @@ const reducer = (state = STATE, action) => {
       break;
     case actions.SET_APP_GRID_IS_LOADING:
       stateNew.app.grid_is_loading = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_ALL_DATA:
+      stateNew.app.is_loading_categorys = payload;
+      stateNew.app.is_loading_products = payload;
+      stateNew.app.is_loading_bills = payload;
+      stateNew.app.is_loading_insurances = payload;
+      stateNew.app.is_loading_customers = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_CATEGORYS:
+      stateNew.app.is_loading_categorys = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_PRODUCTS:
+      stateNew.app.is_loading_products = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_BILLS:
+      stateNew.app.is_loading_bills = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_INSURANCES:
+      stateNew.app.is_loading_insurances = payload;
+      break;
+    case actions.SET_APP_IS_LOADING_CUSTOMERS:
+      stateNew.app.is_loading_customers = payload;
       break;
     
     // Data

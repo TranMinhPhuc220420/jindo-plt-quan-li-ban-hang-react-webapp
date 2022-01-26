@@ -25,7 +25,7 @@ const ViewProfile = () => {
 
   //Component return view
   return (
-    <div className={'container'} style={{height: heightAuto}}>
+    <div style={{height: heightAuto}}>
       <FormEditProfile/>
     </div>
   )

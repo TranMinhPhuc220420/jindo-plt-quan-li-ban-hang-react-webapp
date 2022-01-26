@@ -8,7 +8,7 @@ import {
   setAppOpenDialogAddNew,
   setAppSnackBar,
   setDataBills,
-  setDataInsurancess,
+  setDataInsurances,
   setDataProducts, setDataCustomers
 } from "../../store/action";
 
@@ -183,7 +183,7 @@ const FormAddNewBill = (props) => {
       dispatch(setDataBills(data));
     });
     InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+      dispatch(setDataInsurances(data));
     });
     ProductRequest.getAll().then(data => {
       dispatch(setDataProducts(data));

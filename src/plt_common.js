@@ -4,6 +4,9 @@ import jQuery from 'jquery';
 import * as constant from './constant';
 import currencyFormatter from "currency-formatter";
 
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-avataaars-sprites';
+
 const PltCommon = {
   getAccessTokenUserCooke: async () => {
     return await Cookies.get(constant.KEY_ACCESS_TOKEN);
@@ -126,6 +129,40 @@ const PltCommon = {
 
   formatVietnamMoney(value) {
     return currencyFormatter.format(value, {code: 'VND'});
+  },
+
+  getCountPriceBill(dataBill, isAboutDiscount) {
+    const data = dataBill.productions;
+    let price = 0;
+
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      price += Number.parseFloat(item.price);
+    }
+
+    if (isAboutDiscount) {
+      return price - PltCommon.getCountDiscountBill(dataBill);
+    } else {
+      return price;
+    }
+  },
+
+  getCountDiscountBill(dataBill) {
+    const data = dataBill.discounts;
+    let price = 0;
+
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      price += item.discount;
+    }
+
+    return price;
+  },
+
+  getAvatarCustomer(name) {
+    return createAvatar(style, {
+      seed: name,
+    });
   }
 };
 

@@ -6,8 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 // Component Material UI
 import {
-  List, ListItem, ListItemText, ListItemSecondaryAction,
-  Divider, Typography, IconButton
+  List, LinearProgress
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -19,7 +18,7 @@ import {
   setAppSnackBar,
   setDataBills,
   setDataCategorys,
-  setDataInsurancess
+  setDataInsurances
 } from "../../store/action";
 import {MyUtils} from "../../utils";
 import PltLang from "../../plt_lang";
@@ -67,6 +66,7 @@ const ListBill = (props) => {
 
     return dataFind;
   });
+  const isLoadingBills = useSelector(state => state.app.is_loading_bills);
 
   // Methods
   const showSnack = (text, color, isShow, time) => {
@@ -116,7 +116,7 @@ const ListBill = (props) => {
       dispatch(setDataBills(data));
     });
     InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+      dispatch(setDataInsurances(data));
     });
   };
   const handlerDeleteFail = () => {
@@ -128,9 +128,19 @@ const ListBill = (props) => {
   // Return content this component
   return (
     <List>
-      {dataBills.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
+      { isLoadingBills ?
+        (
+          <LinearProgress/>
+        )
+        :
+        (
+          <>
+            {dataBills.length === 0 && (
+              PltLang.getMsg('TXT_DATA_EMPTY')
+            )}
+          </>
+        )
+      }
       {dataBills.map((dataItem, index) => (
         <div className="mb-2 my-shadow" key={index}>
           <ItemListBill dataItem={dataItem}/>

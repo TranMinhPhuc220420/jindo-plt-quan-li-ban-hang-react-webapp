@@ -24,6 +24,8 @@ import GridBill from "../../components/grid/Bill";
 import PltLang from "../../plt_lang";
 import PltCommon from "../../plt_common";
 import BillRequest from "../../requests/Bill";
+import DialogContainerDetail from "../../components/dialog/ContainerDetail";
+import PanelDetailBill from "../../components/panel/DetailBill";
 
 // Main this component
 const ViewBillDesktop = (props) => {
@@ -32,6 +34,7 @@ const ViewBillDesktop = (props) => {
   // Variable component
 
   // Variable store
+  const openDialogDetail = useSelector(state => state.app.open_dialog_detail);
 
   // Methods
   const handlerShowDialogAddNew = () => {
@@ -75,6 +78,12 @@ const ViewBillDesktop = (props) => {
       </div>
 
       <GridBill/>
+
+      {openDialogDetail.is_show && (
+        <DialogContainerDetail fullScreen={false} open={openDialogDetail.is_show} title={PltLang.getMsg('TITLE_DIALOG_DETAIL')}>
+          <PanelDetailBill dataBill={openDialogDetail.dataDetail}/>
+        </DialogContainerDetail>
+      )}
     </>
   )
 };

@@ -10,6 +10,8 @@ const PltLang = {
     TXT_BTN_ADD_NEW: 'Thêm mới',
     TXT_BTN_UPDATE: 'Cập nhật',
     TXT_BTN_DELETE: 'Xoá',
+    TXT_BTN_PRINT: 'In',
+    TXT_BTN_PRINT_BILL: 'In hoá đơn',
     TXT_BTN_ADD_PRODUCT: 'Thêm sản phẩm',
     TXT_TITLE_CARD_LOGIN: 'PLT Solution - Đăng nhập',
     TITLE_DIALOG_ADD_NEW: 'Thêm dữ liệu mới',
@@ -62,7 +64,7 @@ const PltLang = {
     LABEL_INPUT_TO_DATE_INSURANCES: 'Số tháng bảo hàng',
     LABEL_INPUT_NOTE: 'Ghi chú',
     LABEL_INPUT_PASSWORD_NEW: 'Mật khẩu mới',
-    LABEL_INPUT_PASSWORD_CONFIRM: 'Mật khẩu cũ',
+    LABEL_INPUT_PASSWORD_CONFIRM: 'Nhập lại mật khẩu mới',
   },
 
   /**

@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, useHistory } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {BrowserRouter as Router, useHistory} from "react-router-dom";
 
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
+  setAppIsLoadingAllData,
+  setAppIsLoadingBills,
+  setAppIsLoadingCategorys,
+  setAppIsLoadingCustomers, setAppIsLoadingInsurances,
+  setAppIsLoadingProducts,
   setAppViewActive,
   setDataBills,
   setDataCategorys,
-  setDataCustomers, setDataInsurancess,
+  setDataCustomers,
+  setDataInsurances,
   setDataProducts,
   setUiLoadMark,
   setUiOpenNavLeft
@@ -23,15 +29,15 @@ import MyRightNavigation from "./MyRightNavigation";
 import {
   Backdrop, CircularProgress, Snackbar, Button, IconButton
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 import PltCommon from "../plt_common";
 import AdminRequest from "../requests/admin";
 import * as constant from "../constant";
-import { setDataUserLogin } from "../store/action";
-import { setDataAccessToken } from "../store/action";
-import { MyUtils } from "../utils";
+import {setDataUserLogin} from "../store/action";
+import {setDataAccessToken} from "../store/action";
+import {MyUtils} from "../utils";
 import PltLang from "../plt_lang";
 import CategoryRequest from "../requests/Category";
 import ProductRequest from "../requests/Product";
@@ -79,7 +85,7 @@ const MyLayout = (props) => {
    */
   const handlerAutoLogin = async () => {
     const accessToken = await PltCommon.getAccessTokenUserCooke();
-    const { data, status, statusText } = await AdminRequest.getInfoByToken(accessToken);
+    const {data, status, statusText} = await AdminRequest.getInfoByToken(accessToken);
 
     if (status == constant.RESPONSE_STATUS_OK) {
       await handlerLoginSuccess(data, false);
@@ -96,7 +102,7 @@ const MyLayout = (props) => {
    * @param {boolean} showNotification
    */
   const handlerLoginSuccess = async (data, showNotification) => {
-    const { user, access_token } = data;
+    const {user, access_token} = data;
 
     // Check user login is admin or client
     const userRole = user.role;
@@ -126,8 +132,7 @@ const MyLayout = (props) => {
 
       // Call init data for Admin
       await initDataForAdmin();
-    }
-    else if (userRole == constant.KEY_OF_ROLE_CLIENT) {
+    } else if (userRole == constant.KEY_OF_ROLE_CLIENT) {
       // TODO:: Handler when user login has role is client
     } else {
       // When role not define in app
@@ -159,20 +164,27 @@ const MyLayout = (props) => {
   };
 
   const initDataForAdmin = async () => {
+    dispatch(setAppIsLoadingAllData(true));
+
     CategoryRequest.getAll().then(data => {
       dispatch(setDataCategorys(data));
+      dispatch(setAppIsLoadingCategorys(false));
     });
     ProductRequest.getAll().then(data => {
       dispatch(setDataProducts(data));
+      dispatch(setAppIsLoadingProducts(false));
     });
     CustomerRequest.getAll().then(data => {
       dispatch(setDataCustomers(data));
+      dispatch(setAppIsLoadingCustomers(false));
     });
     BillRequest.getAll().then(data => {
       dispatch(setDataBills(data));
+      dispatch(setAppIsLoadingBills(false));
     });
     InsurancesRequest.getAll().then(data => {
-      dispatch(setDataInsurancess(data));
+      dispatch(setDataInsurances(data));
+      dispatch(setAppIsLoadingInsurances(false));
     });
   };
   // * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -183,18 +195,18 @@ const MyLayout = (props) => {
         <>
           {user != null && (
             <>
-              <MyRightNavigation />
-              <MyTopNavigation />
+              <MyRightNavigation/>
+              <MyTopNavigation/>
             </>
           )}
 
-          <div style={{ paddingTop: 56, overflow: 'scroll' }}>
+          <div style={{paddingTop: 56, overflow: 'scroll'}}>
             {props.children}
           </div>
 
           {user != null && (
             <>
-              <MyBottomNavigation />
+              <MyBottomNavigation/>
             </>
           )}
         </>
@@ -208,7 +220,7 @@ const MyLayout = (props) => {
       )}
 
       <Backdrop className={classes.backdrop} open={loadMark}>
-        <CircularProgress color="inherit" />
+        <CircularProgress color="inherit"/>
       </Backdrop>
 
       <Snackbar
@@ -216,10 +228,10 @@ const MyLayout = (props) => {
         open={snackBar.open}
         message={snackBar.text}
         className={snackBar.color}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         action={
           <IconButton color="inherit" size="small">
-            <CancelIcon />
+            <CancelIcon/>
           </IconButton>
         }
       />

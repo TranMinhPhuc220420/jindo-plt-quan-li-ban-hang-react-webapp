@@ -21,6 +21,7 @@ import {MyUtils} from "../../utils";
 import PltLang from "../../plt_lang";
 import ProductRequest from '../../requests/Product';
 import {DOMAIN_APP} from "../../constant";
+import DialogContainerList from "../dialog/ContainerList";
 
 // Utils mores
 
@@ -88,17 +89,21 @@ const ListSelectProduct = (props) => {
         )}
         {dataProducts.map((dataItem, index) => (
           <div key={index}>
-            <ListItem button onClick={() => {
-              handlerClickClickItemList(dataItem)
-            }}>
-              <ListItemAvatar>
-                <Avatar alt={dataItem.name} src={`${DOMAIN_APP}${dataItem.image_url}`}/>
-              </ListItemAvatar>
-              <ListItemText>
-                {dataItem.name}
-              </ListItemText>
-            </ListItem>
-            <Divider/>
+            {dataItem.rest > 0 && (
+              <>
+                <ListItem button onClick={() => {
+                  handlerClickClickItemList(dataItem)
+                }}>
+                  <ListItemAvatar>
+                    <Avatar alt={dataItem.name} src={`${DOMAIN_APP}${dataItem.image_url}`}/>
+                  </ListItemAvatar>
+                  <ListItemText>
+                    {dataItem.name}
+                  </ListItemText>
+                </ListItem>
+                <Divider/>
+              </>
+            )}
           </div>
         ))}
       </List>

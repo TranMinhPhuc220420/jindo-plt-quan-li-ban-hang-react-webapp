@@ -20,6 +20,8 @@ import PltCommon from "../../plt_common";
 import ListInsurances from "../../components/list/Insurances";
 import FormEditInsurances from "../../components/form/EditInsurances";
 import PanelDetailInsurances from "../../components/panel/DetailInsurances";
+import DialogContainerDetail from "../../components/dialog/ContainerDetail";
+import PanelDetailBill from "../../components/panel/DetailBill";
 
 // Main this component
 const ViewInsurancesMobile = (props) => {
@@ -29,6 +31,7 @@ const ViewInsurancesMobile = (props) => {
   // Variable store
   const openDialogAddNew = useSelector(state => state.app.open_dialog_add_new);
   const openDialogEdit = useSelector(state => state.app.open_dialog_edit);
+  const openDialogDetail = useSelector(state => state.app.open_dialog_detail);
 
   // Methods
 
@@ -39,10 +42,10 @@ const ViewInsurancesMobile = (props) => {
     <>
       <ListInsurances/>
 
-      {openDialogEdit.is_show && (
-        <DialogContainerForm open={openDialogEdit.is_show} title={PltLang.getMsg('TITLE_DIALOG_UPDATE')}>
-          <PanelDetailInsurances dataEdit={openDialogEdit.dataEdit}/>
-        </DialogContainerForm>
+      {openDialogDetail.is_show && (
+        <DialogContainerDetail fullScreen={true} open={openDialogDetail.is_show} title={PltLang.getMsg('TITLE_DIALOG_DETAIL')}>
+          <PanelDetailInsurances dataDetail={openDialogDetail.dataDetail}/>
+        </DialogContainerDetail>
       )}
     </>
   )

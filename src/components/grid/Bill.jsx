@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 
 // Store redux
 import {useSelector, useDispatch} from 'react-redux';
-import {setAppOpenDialogEdit, setAppSnackBar, setDataBills} from "../../store/action";
+import {setAppOpenDialogDetail, setAppOpenDialogEdit, setAppSnackBar, setDataBills} from "../../store/action";
 
 // Component Material UI
 import {
@@ -13,15 +13,13 @@ import {
   Chip, Avatar, Divider, Typography,
   List, ListItem, ListItemAvatar, ListItemText,
 } from '@material-ui/core';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import {
   DataGrid,
   GridToolbar, GridActionsCellItem,
 } from '@mui/x-data-grid';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
 // PLT Solution
 import PltCommon from "../../plt_common";
@@ -41,19 +39,43 @@ const GridBill = (props) => {
   const history = useHistory();
 
   // Variable component
-  const [openDialogProducts, setOpenDialogProducts] = useState(false);
-  const [openDialogInsurances, setOpenDialogInsurances] = useState(false);
-  const [dataBillShow, setDataBillShow] = useState(null);
 
   // Variable store
-
   const dataBills = useSelector(state => state.data.bills);
   const gridIsLoading = useSelector(state => state.app.grid_is_loading);
 
   const columns = [
     {
       field: 'id',
-      headerName: '#ID'
+      headerName: '#ID',
+      width: 50,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({id}) => {
+        return [
+          <GridActionsCellItem
+            icon={<AssignmentIcon/>}
+            label="Detail"
+            className="text-primary"
+            onClick={() => {
+              handlerClickShowDetail(id)
+            }}
+          />,
+          // <GridActionsCellItem
+          //   icon={<DeleteIcon/>}
+          //   label="Delete"
+          //   className="text-danger"
+          //   onClick={() => {
+          //     handlerClickDelete(id)
+          //   }}
+          // />,
+        ];
+      }
     },
     {
       field: 'customer',
@@ -76,11 +98,11 @@ const GridBill = (props) => {
           <Chip color="primary"
                 avatar={<Avatar src={`${DOMAIN_APP + data.productions[0].image_url}`}/>}
                 label={data.productions.length + ' sản phẩm'}
-                clickable
-                onDelete={() => {
-                  handlerShowDialogListProducts(data)
-                }}
-                deleteIcon={<VisibilityIcon/>}
+                // clickable
+                // onDelete={() => {
+                //   handlerShowDialogListProducts(data)
+                // }}
+                // deleteIcon={<VisibilityIcon/>}
           />
         ];
       },
@@ -110,18 +132,18 @@ const GridBill = (props) => {
         if (data.insurances.length > 0) {
           return [
             <Chip color="primary"
-                  variant="contained"
+                  variant="outlined"
                   label={'Có ' + data.insurances.length + ' bảo hành'}
-                  clickable
-                  onDelete={() => {
-                    handlerShowDialogListInsurances(data)
-                  }}
-                  deleteIcon={<VisibilityIcon/>}
+                  // clickable
+                  // onDelete={() => {
+                  //   handlerShowDialogListInsurances(data)
+                  // }}
+                  // deleteIcon={<VisibilityIcon/>}
             />
           ];
         } else {
           return [
-            <Chip color="primary"
+            <Chip color="secondary"
                   variant="outlined"
                   label={'Không có bảo hành'}
             />
@@ -136,33 +158,6 @@ const GridBill = (props) => {
       valueFormatter: (params) => {
         return Moment(params.value).format('DD-MM-YYYY hh:mm');
       },
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: ({id}) => {
-        return [
-          // <GridActionsCellItem
-          //     icon={<EditIcon/>}
-          //     label="Edit"
-          //     className="text-success"
-          //     onClick={() => {
-          //         handlerClickEdit(id)
-          //     }}
-          // />,
-          <GridActionsCellItem
-            icon={<DeleteIcon/>}
-            label="Delete"
-            className="text-danger"
-            onClick={() => {
-              handlerClickDelete(id)
-            }}
-          />,
-        ];
-      }
     }
   ];
 
@@ -204,14 +199,12 @@ const GridBill = (props) => {
     // }
   };
 
-  const handlerClickEdit = (idEdit) => {
-    // const productEdit = getBillByID(idEdit);
-    // dispatch(setAppOpenDialogEdit({
-    //     is_show: false,
-    //     dataEdit: productEdit
-    // }));
-    //
-    // history.push('/admin/san-pham/chinh-sua/' + idEdit)
+  const handlerClickShowDetail = (idEdit) => {
+    const productShowDetail = getBillByID(idEdit);
+    dispatch(setAppOpenDialogDetail({
+      is_show: true,
+      dataDetail: productShowDetail
+    }));
   };
 
   const handlerClickDelete = (idEdit) => {
@@ -250,16 +243,6 @@ const GridBill = (props) => {
     showSnack(PltLang.getMsg('TXT_DELETE_FAILD'), 'text-error', true);
     dispatch(setAppOpenDialogEdit(false));
   };
-
-  const handlerShowDialogListProducts = (data) => {
-    setDataBillShow(data);
-    setOpenDialogProducts(true);
-  };
-
-  const handlerShowDialogListInsurances = (data) => {
-    setDataBillShow(data);
-    setOpenDialogInsurances(true);
-  };
   // End methods *******************
 
   // Return content this component
@@ -269,7 +252,7 @@ const GridBill = (props) => {
         PltLang.getMsg('TXT_DATA_EMPTY')
       )}
 
-      <div style={{display: 'flex', height: '95%'}}>
+      <div style={{display: 'flex', height: '100%'}}>
         <div style={{flexGrow: 1}}>
 
           {gridIsLoading && (
@@ -289,87 +272,87 @@ const GridBill = (props) => {
       </div>
 
 
-      {/* Dialog show list Product has in bill */}
-      {((dataBillShow != null) && (openDialogProducts == true)) && (
-        <DialogContainerList
-          open={openDialogProducts}
-          fullScreen={false}
-          title={`Sản phẩm có trong hoá đơn của ${dataBillShow.customer.name}`}
-          onClose={() => {
-            setDataBillShow(null);
-            setOpenDialogProducts(false);
-          }}
-        >
-          <List>
-            {dataBillShow.productions.map((itemData, index) => (
-              <div key={index}>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar alt={itemData.name} src={`${DOMAIN_APP}${itemData.image_url}`}/>
-                  </ListItemAvatar>
-                  <ListItemText>
-                    <span>
-                        {itemData.name}
-                    </span>
-                    <Chip
-                      color="primary"
-                      variant="contained"
-                      className="ml-2"
-                      label={currencyFormatter.format(itemData.price, {code: 'VND'})}
-                    />
-                  </ListItemText>
-                </ListItem>
+      {/*/!* Dialog show list Product has in bill *!/*/}
+      {/*{((dataBillShow != null) && (openDialogProducts == true)) && (*/}
+      {/*  <DialogContainerList*/}
+      {/*    open={openDialogProducts}*/}
+      {/*    fullScreen={false}*/}
+      {/*    title={`Sản phẩm có trong hoá đơn của ${dataBillShow.customer.name}`}*/}
+      {/*    onClose={() => {*/}
+      {/*      setDataBillShow(null);*/}
+      {/*      setOpenDialogProducts(false);*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <List>*/}
+      {/*      {dataBillShow.productions.map((itemData, index) => (*/}
+      {/*        <div key={index}>*/}
+      {/*          <ListItem>*/}
+      {/*            <ListItemAvatar>*/}
+      {/*              <Avatar alt={itemData.name} src={`${DOMAIN_APP}${itemData.image_url}`}/>*/}
+      {/*            </ListItemAvatar>*/}
+      {/*            <ListItemText>*/}
+      {/*              <span>*/}
+      {/*                  {itemData.name}*/}
+      {/*              </span>*/}
+      {/*              <Chip*/}
+      {/*                color="primary"*/}
+      {/*                variant="contained"*/}
+      {/*                className="ml-2"*/}
+      {/*                label={currencyFormatter.format(itemData.price, {code: 'VND'})}*/}
+      {/*              />*/}
+      {/*            </ListItemText>*/}
+      {/*          </ListItem>*/}
 
-                {dataBillShow.productions[index + 1] && (
-                  <Divider/>
-                )}
-              </div>
-            ))}
-          </List>
-        </DialogContainerList>
-      )}
+      {/*          {dataBillShow.productions[index + 1] && (*/}
+      {/*            <Divider/>*/}
+      {/*          )}*/}
+      {/*        </div>*/}
+      {/*      ))}*/}
+      {/*    </List>*/}
+      {/*  </DialogContainerList>*/}
+      {/*)}*/}
 
-      {/* Dialog show list Insurances has in bill */}
-      {((dataBillShow != null) && (openDialogInsurances == true)) && (
-        <DialogContainerList
-          open={openDialogInsurances}
-          fullScreen={false}
-          title={`Phiếu bảo hành có trong hoá đơn của ${dataBillShow.customer.name}`}
-          onClose={() => {
-            setDataBillShow(null);
-            setOpenDialogInsurances(false);
-          }}
-        >
-          <List>
-            {dataBillShow.insurances.map((itemData, index) => (
-              <div key={index}>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar alt={itemData.production.name} src={`${DOMAIN_APP}${itemData.production.image_url}`}/>
-                  </ListItemAvatar>
-                  <ListItemText>
-                    <Typography>
-                      {itemData.production.name}
-                    </Typography>
-                    <Chip
-                      color="primary"
-                      label={`${itemData.to_date} tháng`}
-                      clickable
-                      onDelete={() => {
-                      }}
-                      deleteIcon={<CalendarTodayIcon/>}
-                    />
-                  </ListItemText>
-                </ListItem>
+      {/*/!* Dialog show list Insurances has in bill *!/*/}
+      {/*{((dataBillShow != null) && (openDialogInsurances == true)) && (*/}
+      {/*  <DialogContainerList*/}
+      {/*    open={openDialogInsurances}*/}
+      {/*    fullScreen={false}*/}
+      {/*    title={`Phiếu bảo hành có trong hoá đơn của ${dataBillShow.customer.name}`}*/}
+      {/*    onClose={() => {*/}
+      {/*      setDataBillShow(null);*/}
+      {/*      setOpenDialogInsurances(false);*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <List>*/}
+      {/*      {dataBillShow.insurances.map((itemData, index) => (*/}
+      {/*        <div key={index}>*/}
+      {/*          <ListItem>*/}
+      {/*            <ListItemAvatar>*/}
+      {/*              <Avatar alt={itemData.production.name} src={`${DOMAIN_APP}${itemData.production.image_url}`}/>*/}
+      {/*            </ListItemAvatar>*/}
+      {/*            <ListItemText>*/}
+      {/*              <Typography>*/}
+      {/*                {itemData.production.name}*/}
+      {/*              </Typography>*/}
+      {/*              <Chip*/}
+      {/*                color="primary"*/}
+      {/*                label={`${itemData.to_date} tháng`}*/}
+      {/*                clickable*/}
+      {/*                onDelete={() => {*/}
+      {/*                }}*/}
+      {/*                deleteIcon={<CalendarTodayIcon/>}*/}
+      {/*              />*/}
+      {/*            </ListItemText>*/}
+      {/*          </ListItem>*/}
 
-                {dataBillShow.insurances[index + 1] && (
-                  <Divider/>
-                )}
-              </div>
-            ))}
-          </List>
-        </DialogContainerList>
-      )}
+      {/*          {dataBillShow.insurances[index + 1] && (*/}
+      {/*            <Divider/>*/}
+      {/*          )}*/}
+      {/*        </div>*/}
+      {/*      ))}*/}
+      {/*    </List>*/}
+      {/*  </DialogContainerList>*/}
+      {/*)}*/}
 
     </>
   )

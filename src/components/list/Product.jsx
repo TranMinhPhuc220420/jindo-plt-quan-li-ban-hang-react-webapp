@@ -6,7 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 // Component Material UI
 import {
-  List, Divider
+  List, Divider, LinearProgress
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -30,6 +30,7 @@ const ListProduct = (props) => {
   // Variable component
 
   // Variable store
+  const isLoadingProducts = useSelector(state => state.app.is_loading_products);
   const dataProducts = useSelector(state => {
     const data = state.data.products;
     const keySearch = state.app.key_search;
@@ -57,16 +58,31 @@ const ListProduct = (props) => {
 
   // Return content this component
   return (
-    <List id="list_product_main">
-      {dataProducts.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
-      {dataProducts.map((dataItem, index) => (
-        <div key={index}>
-          <ItemListProduct dataProduct={dataItem}/>
-          <Divider/>
-        </div>
-      ))}
+    <List id="list_product_main" className="my-list-item-action">
+      { isLoadingProducts ?
+        (
+          <LinearProgress/>
+        )
+        :
+        (
+          <>
+            {dataProducts.length == 0 ?
+              <span>
+                {PltLang.getMsg('TXT_DATA_EMPTY')}
+              </span>
+              :
+              <>
+                {dataProducts.map((dataItem, index) => (
+                  <div key={index}>
+                    <ItemListProduct dataProduct={dataItem}/>
+                    <Divider/>
+                  </div>
+                ))}
+              </>
+            }
+          </>
+        )
+      }
     </List>
   )
 };
