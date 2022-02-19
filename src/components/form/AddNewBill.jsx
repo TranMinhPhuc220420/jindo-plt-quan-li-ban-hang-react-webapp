@@ -127,6 +127,7 @@ const FormAddNewBill = (props) => {
         arrProductId.push({
           "production_id": item.data.id,
           "discount": item.discout,
+          "total": item.total,
           "insurance": {
             "has_insurance": item.has_insurances,
             "note": item.insurances.note,
@@ -228,6 +229,8 @@ const FormAddNewBill = (props) => {
     dataClone.push({
       data: data,
       discout: 0,
+      total: 1,
+      error_total: false,
       has_insurances: false,
       insurances: {
         note: '',
@@ -250,7 +253,7 @@ const FormAddNewBill = (props) => {
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      price += item.data.price;
+      price += (item.data.price * item.total);
     }
 
     return price;
@@ -262,7 +265,7 @@ const FormAddNewBill = (props) => {
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      price += item.discout;
+      price += (item.discout * item.total);
     }
 
     return price;
@@ -284,7 +287,7 @@ const FormAddNewBill = (props) => {
 
   // Return content this component
   return (
-    <form style={{height: heightAuto}} onSubmit={handlerSubmit}>
+    <form style={{height: isMobile ? heightAuto : 'auto'}} onSubmit={handlerSubmit}>
       <Card className={'w-100 h-100 overflow-auto'}>
         <CardContent className="">
           <div className={'mb-4'}>
@@ -425,6 +428,33 @@ const FormAddNewBill = (props) => {
                                      if (!value || value === '') value = 0;
                                      dataClone[index].discout = Number.parseFloat(value);
                                      setListProduct(dataClone);
+                                   }}
+                        />
+                      </FormControl>
+
+                      <FormControl className={'w-100 mt-3'}>
+                        <TextField label={PltLang.getMsg('LABEL_INPUT_TOTAL')}
+                                   helperText={`Còn ${itemData.data.rest} sản phẩm`}
+                                   error={itemData.error_total}
+                                   variant="outlined"
+                                   type={'number'}
+                                   value={itemData.total}
+                                   onChange={(event) => {
+                                    //  setTimeout(() => {
+                                       const dataClone = [...list_products];
+                                       let value = Number.parseInt(event.target.value);
+                                       if (!value || value === '') value = 0;
+                                      //  console.log(value)
+                                      //  const dataProduct = dataClone[index].data;
+                                      //  if (dataProduct.rest >= dataClone[index].total) {
+                                        //    dataClone.error_total = false;
+                                        dataClone[index].total = value;
+                                        setListProduct(dataClone);
+                                      //  } else {
+                                      //   //  dataClone.error_total = true;
+                                      //   //  setListProduct(dataClone);
+                                      //  }
+                                    //  }, 200);
                                    }}
                         />
                       </FormControl>

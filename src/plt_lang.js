@@ -58,6 +58,7 @@ const PltLang = {
     LABEL_INPUT_PHONE_CUSTOMER: 'Số điện thoại khách hàng',
     LABEL_CHECKBOX_HAS_CUSTOMER_IN_DATA: 'Đã có dữ liệu khách hàng',
     LABEL_INPUT_DISCOUNT: 'Giá giảm',
+    LABEL_INPUT_TOTAL: 'Số lượng',
     LABEL_INPUT_DATE_SELL: 'Ngày bán',
     LABEL_INPUT_TIME_SELL: 'Giờ bán',
     LABEL_CHECKBOX_HAS_INSURANCES: 'Có bảo hành',

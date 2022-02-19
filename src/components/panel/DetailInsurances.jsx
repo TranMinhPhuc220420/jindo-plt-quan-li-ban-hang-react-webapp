@@ -61,12 +61,12 @@ const PanelDetailInsurances = (props) => {
       <CardContent>
         <table>
           <tbody>
-            <tr>
+            {/* <tr>
               <td>Mã bảo hành:</td>
               <td>
                 <span>#{props.dataDetail.id}</span>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td>Thời hạn:</td>
               <td>

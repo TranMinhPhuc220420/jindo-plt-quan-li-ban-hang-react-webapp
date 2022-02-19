@@ -143,7 +143,7 @@ const PanelDetailBill = (props) => {
               <td><PersonIcon/></td>
               <td><span>Khách hàng</span></td>
             </tr>
-            <tr>
+            {/* <tr>
               <td></td>
               <td>Mã ID:</td>
               <td>
@@ -151,7 +151,7 @@ const PanelDetailBill = (props) => {
                   #{props.dataBill.customer.id}
                 </Typography>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td></td>
               <td>Tên:</td>
@@ -206,7 +206,7 @@ const PanelDetailBill = (props) => {
                   )
                   }
 
-                  <span> x1 </span>
+                  <span> x{props.dataBill.totals[index].total} </span>
                 </div>
 
 
@@ -248,7 +248,7 @@ const PanelDetailBill = (props) => {
               <td><MonetizationOnIcon/></td>
               <td><span>Tổng hoá đơn</span></td>
             </tr>
-            <tr>
+            {/* <tr>
               <td></td>
               <td>Mã hoá đơn:</td>
               <td>
@@ -256,7 +256,7 @@ const PanelDetailBill = (props) => {
                   #{props.dataBill.id}
                 </Typography>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td></td>
               <td>Tổng tiền hàng:</td>

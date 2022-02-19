@@ -61,30 +61,32 @@ const ItemListBill = (props) => {
           </span>
         </div>
 
-        <div className="product-main d-flex">
-          <img className="product-image" src={DOMAIN_APP + props.dataItem.productions[0].image_url} alt=""/>
-          <div className="info-product">
-            <div className="product-name">
-              <span>{props.dataItem.productions[0].name}</span>
-            </div>
+        {props.dataItem.productions[0] && (
+          <div className="product-main d-flex">
+            <img className="product-image" src={DOMAIN_APP + props.dataItem.productions[0].image_url} alt=""/>
+            <div className="info-product">
+              <div className="product-name">
+                <span>{props.dataItem.productions[0].name}</span>
+              </div>
 
-            {/*if */}
-            {props.dataItem.insurances.length != 0 ? (
-              <Chip
-                label={`Có ${props.dataItem.insurances.length} phiếu bảo hành`}
-                variant="outlined" size="small"
-                color="primary"
-              />
-            ) : (
-              <Chip
-                label={`Không có phiếu bảo hành`}
-                variant="outlined" size="small"
-                color="secondary"
-              />
-            )
-            }
+              {/*if */}
+              {props.dataItem.insurances.length != 0 ? (
+                <Chip
+                  label={`Có ${props.dataItem.insurances.length} phiếu bảo hành`}
+                  variant="outlined" size="small"
+                  color="primary"
+                />
+              ) : (
+                <Chip
+                  label={`Không có phiếu bảo hành`}
+                  variant="outlined" size="small"
+                  color="secondary"
+                />
+              )
+              }
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="total-bill d-flex justify-content-between align-items-end border-top border-bottom my-1">
           <div>
