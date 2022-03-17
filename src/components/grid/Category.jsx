@@ -164,10 +164,6 @@ const GridCagegory = (props) => {
   // Return content this component
   return (
     <>
-      {dataCategorys.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
-
       <div style={{ display: 'flex', height: '95%' }}>
         <div style={{ flexGrow: 1 }}>
 

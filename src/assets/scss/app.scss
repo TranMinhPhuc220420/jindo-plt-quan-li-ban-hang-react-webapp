@@ -90,6 +90,10 @@ img {
 }
 
 .panel-detail-bill {
+  .MuiBox-root {
+    min-width: 500px;
+  }
+
   .customer {
     border-radius: 10px;
     border-bottom: 1px solid #ddd;
@@ -111,13 +115,15 @@ img {
     }
 
     .product-item {
+      margin: 5px 0;
       .product-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
+        width: 100px !important;
+        height: 100% !important;
+        //object-fit: cover;
         border: 1px solid #ddd;
         border-radius: 10px;
         margin-right: 5px;
+        padding: 5px;
       }
 
       .product-name {

@@ -93,7 +93,6 @@ const GridBill = (props) => {
       width: 200,
       getActions: (record) => {
         const data = record.row;
-        console.log(data)
         return [
           <Chip color="primary"
                 avatar={<Avatar src={`${DOMAIN_APP + data.productions[0].image_url}`}/>}
@@ -248,11 +247,7 @@ const GridBill = (props) => {
   // Return content this component
   return (
     <>
-      {dataBills.length === 0 && (
-        PltLang.getMsg('TXT_DATA_EMPTY')
-      )}
-
-      <div style={{display: 'flex', height: '100%'}}>
+      <div style={{display: 'flex', height: '95%'}}>
         <div style={{flexGrow: 1}}>
 
           {gridIsLoading && (
@@ -270,90 +265,6 @@ const GridBill = (props) => {
           />
         </div>
       </div>
-
-
-      {/*/!* Dialog show list Product has in bill *!/*/}
-      {/*{((dataBillShow != null) && (openDialogProducts == true)) && (*/}
-      {/*  <DialogContainerList*/}
-      {/*    open={openDialogProducts}*/}
-      {/*    fullScreen={false}*/}
-      {/*    title={`Sản phẩm có trong hoá đơn của ${dataBillShow.customer.name}`}*/}
-      {/*    onClose={() => {*/}
-      {/*      setDataBillShow(null);*/}
-      {/*      setOpenDialogProducts(false);*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <List>*/}
-      {/*      {dataBillShow.productions.map((itemData, index) => (*/}
-      {/*        <div key={index}>*/}
-      {/*          <ListItem>*/}
-      {/*            <ListItemAvatar>*/}
-      {/*              <Avatar alt={itemData.name} src={`${DOMAIN_APP}${itemData.image_url}`}/>*/}
-      {/*            </ListItemAvatar>*/}
-      {/*            <ListItemText>*/}
-      {/*              <span>*/}
-      {/*                  {itemData.name}*/}
-      {/*              </span>*/}
-      {/*              <Chip*/}
-      {/*                color="primary"*/}
-      {/*                variant="contained"*/}
-      {/*                className="ml-2"*/}
-      {/*                label={currencyFormatter.format(itemData.price, {code: 'VND'})}*/}
-      {/*              />*/}
-      {/*            </ListItemText>*/}
-      {/*          </ListItem>*/}
-
-      {/*          {dataBillShow.productions[index + 1] && (*/}
-      {/*            <Divider/>*/}
-      {/*          )}*/}
-      {/*        </div>*/}
-      {/*      ))}*/}
-      {/*    </List>*/}
-      {/*  </DialogContainerList>*/}
-      {/*)}*/}
-
-      {/*/!* Dialog show list Insurances has in bill *!/*/}
-      {/*{((dataBillShow != null) && (openDialogInsurances == true)) && (*/}
-      {/*  <DialogContainerList*/}
-      {/*    open={openDialogInsurances}*/}
-      {/*    fullScreen={false}*/}
-      {/*    title={`Phiếu bảo hành có trong hoá đơn của ${dataBillShow.customer.name}`}*/}
-      {/*    onClose={() => {*/}
-      {/*      setDataBillShow(null);*/}
-      {/*      setOpenDialogInsurances(false);*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <List>*/}
-      {/*      {dataBillShow.insurances.map((itemData, index) => (*/}
-      {/*        <div key={index}>*/}
-      {/*          <ListItem>*/}
-      {/*            <ListItemAvatar>*/}
-      {/*              <Avatar alt={itemData.production.name} src={`${DOMAIN_APP}${itemData.production.image_url}`}/>*/}
-      {/*            </ListItemAvatar>*/}
-      {/*            <ListItemText>*/}
-      {/*              <Typography>*/}
-      {/*                {itemData.production.name}*/}
-      {/*              </Typography>*/}
-      {/*              <Chip*/}
-      {/*                color="primary"*/}
-      {/*                label={`${itemData.to_date} tháng`}*/}
-      {/*                clickable*/}
-      {/*                onDelete={() => {*/}
-      {/*                }}*/}
-      {/*                deleteIcon={<CalendarTodayIcon/>}*/}
-      {/*              />*/}
-      {/*            </ListItemText>*/}
-      {/*          </ListItem>*/}
-
-      {/*          {dataBillShow.insurances[index + 1] && (*/}
-      {/*            <Divider/>*/}
-      {/*          )}*/}
-      {/*        </div>*/}
-      {/*      ))}*/}
-      {/*    </List>*/}
-      {/*  </DialogContainerList>*/}
-      {/*)}*/}
-
     </>
   )
 };

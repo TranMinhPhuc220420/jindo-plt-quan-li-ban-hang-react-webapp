@@ -21,14 +21,18 @@ const ViewCategory = () => {
   const history = useHistory();
 
   // Variable component
-  const heightAuto = PltCommon.getHeightBody() - (55 + 66);
+  const [heightView, setHeightView] = useState(0);
   const [isMobile, setIsMobile] = useState(PltCommon.isMobile);
 
   // Variable store
 
+  useEffect(() => {
+    setHeightView(PltCommon.getHeightBody() - (55 + 66));
+  }, []);
+
   //Component return view
   return (
-    <div style={{height: heightAuto}}>
+    <div style={{height: heightView}}>
       {isMobile && (
         <ViewCategoryMobile/>
       )}
