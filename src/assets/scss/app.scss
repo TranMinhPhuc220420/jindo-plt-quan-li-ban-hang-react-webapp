@@ -10,6 +10,26 @@ img {
   object-fit: cover;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+}
+
 #views_login {
   height: 100vh;
   width: 100%;
@@ -230,5 +250,11 @@ img {
       border-radius: 10px;
       margin-right: 5px;
     }
+  }
+}
+
+.toolbar {
+  .MuiFormControlLabel-root {
+    margin: 0;
   }
 }

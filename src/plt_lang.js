@@ -66,6 +66,7 @@ const PltLang = {
     LABEL_INPUT_NOTE: 'Ghi chú',
     LABEL_INPUT_PASSWORD_NEW: 'Mật khẩu mới',
     LABEL_INPUT_PASSWORD_CONFIRM: 'Nhập lại mật khẩu mới',
+    LABEL_CHECKBOX_PRODUCT_OVER_REST: 'Sản phẩm đã hết',
   },
 
   /**

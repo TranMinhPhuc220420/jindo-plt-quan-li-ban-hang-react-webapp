@@ -30,9 +30,10 @@ import Moment from 'moment';
 import ProductRequest from "../../requests/Product";
 
 // Main this component
-const GridProduct = (props) => {
+const GridProduct = ({dataSearch}) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
   // Variable component
 
   // Variable store
@@ -41,20 +42,63 @@ const GridProduct = (props) => {
     const data = state.data.products;
     const keySearch = state.app.key_search;
 
-    if (!keySearch || keySearch === '') {
+    if ((!keySearch || keySearch === '') && dataSearch.categorySearch === '' && dataSearch.isSearchOverRest === false) {
       return data;
     }
 
     const dataFind = [];
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
-      const likeName = PltCommon.subStrToLowWidthSpace(item.name).indexOf(keySearch) !== -1;
-      const likeCateogryName = PltCommon.subStrToLowWidthSpace(item.category.name).indexOf(keySearch) !== -1;
-      if (likeName || likeCateogryName) {
+
+      let isPush = false;
+
+      if (!keySearch && keySearch != '') {
+        const likeName = PltCommon.subStrToLowWidthSpace(item.name).indexOf(keySearch) !== -1;
+        const likeCateogryName = PltCommon.subStrToLowWidthSpace(item.category.name).indexOf(keySearch) !== -1;
+        if (likeName || likeCateogryName) {
+          isPush = true;
+        } else {
+          isPush = false;
+        }
+      }
+
+      if (dataSearch.categorySearch != '') {
+        if (item.category.id === dataSearch.categorySearch) {
+          if (dataSearch.isSearchOverRest == true) {
+            if (item.rest <= 0) {
+              isPush = true;
+            } else {
+              isPush = false;
+            }
+          } else {
+            isPush = true;
+          }
+          isPush = true;
+        } else {
+          isPush = false;
+        }
+      }
+
+      if (dataSearch.isSearchOverRest == true) {
+        if (item.rest <= 0) {
+          if (dataSearch.categorySearch != '') {
+            if (item.category.id === dataSearch.categorySearch) {
+              isPush = true;
+            } else {
+              isPush = false;
+            }
+          } else {
+            isPush = true;
+          }
+        } else {
+          isPush = false;
+        }
+      }
+
+      if (isPush == true) {
         dataFind.push(item);
       }
     }
-
     return dataFind;
   });
   const gridIsLoading = useSelector(state => state.app.grid_is_loading);
